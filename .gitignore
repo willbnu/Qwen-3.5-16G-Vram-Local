@@ -49,6 +49,7 @@ desktop.ini
 *.png
 *.jpg
 *.jpeg
+test_images/
 
 # --- Stray artifacts ---
 nul
@@ -56,6 +57,7 @@ nul
 *.bak
 *.swp
 *.swo
+SOCIAL_POSTS.md
 
 # --- IDE ---
 .idea/

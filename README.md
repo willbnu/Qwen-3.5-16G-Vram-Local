@@ -1,15 +1,30 @@
-# Qwen3.5-35B-A3B on RTX 5080 16GB — Optimal llama.cpp Setup
+<div align="center">
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│   124 t/s generation   ·   152K context   ·   Vision on     │
-│   All 41 layers on GPU ·   15.4 GB VRAM   ·   Windows 11    │
-└─────────────────────────────────────────────────────────────┘
-```
+# 🚀 Qwen3.5-35B-A3B × RTX 5080 16GB
 
-> Production-tested llama.cpp config for **Qwen3.5-35B-A3B** on a consumer 16GB GPU —
-> with verified benchmark numbers, working vision, and a previously undocumented
-> **hard performance cliff at exactly 155,904 tokens** (and the root cause).
+### Optimal llama.cpp Setup — Verified Benchmarks — Context Cliff Discovery
+
+<br>
+
+|    ⚡ Speed     |   🧠 Context    |   👁️ Vision   |      🎮 GPU      |   💾 VRAM   |
+| :-------------: | :-------------: | :-----------: | :--------------: | :---------: |
+| **124 t/s avg** | **152K tokens** |  **Enabled**  | **41/41 layers** | **15.4 GB** |
+|  166 t/s peak   |   155,904 max   | mmproj loaded |    All on GPU    | 245 MB free |
+
+<br>
+
+> **⚠️ Key discovery:** There is a hard performance cliff at exactly **155,904 tokens** on 16GB VRAM —
+> speed drops from 124 t/s to 9 t/s with a single 256-token increase. Not a VRAM issue.
+> Root cause documented inside.
+
+<br>
+
+![Platform](https://img.shields.io/badge/Platform-Windows%2011-0078D4?style=flat-square&logo=windows)
+![GPU](https://img.shields.io/badge/GPU-RTX%205080%2016GB-76B900?style=flat-square&logo=nvidia)
+![llama.cpp](https://img.shields.io/badge/llama.cpp-b8196-FF6B35?style=flat-square)
+![License](https://img.shields.io/badge/License-MIT-green?style=flat-square)
+
+</div>
 
 ---
 

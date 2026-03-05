@@ -69,7 +69,7 @@ servers:
     use_case: "fast_vision"
     description: "Full 256K context, q8_0 KV, ~97.5 t/s avg / 112 t/s peak, 5.4 GB headroom"
 
-  # QUALITY SERVER - 27B Q3_K_S dense — VERIFIED 36 t/s
+  # QUALITY SERVER - 27B Q3_K_S dense — OPTIMIZED 46 t/s with q8_0 KV
   # Dense model: all 27B params active per token (best quality/token)
   quality_vision:
     enabled: true
@@ -81,17 +81,17 @@ servers:
       context: 65536
       gpu_layers: 99 # All 65/65 layers on GPU
       flash_attn: "on"
-      cache_type_k: "iq4_nl" # 1152MB at 64K
-      cache_type_v: "iq4_nl"
+      cache_type_k: "q8_0" # FASTER: 46 t/s vs 41 t/s with iq4_nl
+      cache_type_v: "q8_0"
+      parallel: 1 # Reduces RS buffer from 598MB to 150MB
       temp: 0.7
       top_p: 0.8
       top_k: 20
       presence_penalty: 1.5
-      enable_thinking: false
-    vram_estimate_gb: 12.9 # model=11.19 + KV=1.15 + mmproj=0.93 + compute=0.49
+      reasoning_budget: 0
+    vram_estimate_gb: 14.9 # model=11.19 + KV=2.18 + mmproj=0.88 + compute=0.49
     use_case: "quality"
-    description: "27B dense — 36 t/s, 325 t/s prompt, 64K ctx, vision, best quality/token"
-    benchmark_verified: "2026-03-04 | 8-prompt coding | avg=36.3 t/s peak=37.5 min=33.6"
+    description: "27B dense — 46 t/s (q8_0 KV), ~300 t/s prompt, 64K ctx, vision, best quality/token"
 
   # CODING + VISION SERVER - Hybrid capability
   coding_vision:

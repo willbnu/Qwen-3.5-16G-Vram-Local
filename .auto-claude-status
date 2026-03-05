@@ -1,0 +1,25 @@
+{
+  "active": true,
+  "spec": "001-set-up-json-render-dashboard-on-localhost",
+  "state": "building",
+  "subtasks": {
+    "completed": 3,
+    "total": 20,
+    "in_progress": 1,
+    "failed": 0
+  },
+  "phase": {
+    "current": "Project Setup & Configuration",
+    "id": null,
+    "total": 4
+  },
+  "workers": {
+    "active": 0,
+    "max": 1
+  },
+  "session": {
+    "number": 1,
+    "started_at": "2026-03-05T18:57:47.035523"
+  },
+  "last_update": "2026-03-05T18:57:47.111690"
+}

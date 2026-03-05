@@ -1,0 +1,39 @@
+{
+  "sandbox": {
+    "enabled": true,
+    "autoAllowBashIfSandboxed": true
+  },
+  "permissions": {
+    "defaultMode": "acceptEdits",
+    "allow": [
+      "Read(./**)",
+      "Write(./**)",
+      "Edit(./**)",
+      "Glob(./**)",
+      "Grep(./**)",
+      "Read(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude\\worktrees\\tasks\\001-set-up-json-render-dashboard-on-localhost/**)",
+      "Write(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude\\worktrees\\tasks\\001-set-up-json-render-dashboard-on-localhost/**)",
+      "Edit(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude\\worktrees\\tasks\\001-set-up-json-render-dashboard-on-localhost/**)",
+      "Glob(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude\\worktrees\\tasks\\001-set-up-json-render-dashboard-on-localhost/**)",
+      "Grep(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude\\worktrees\\tasks\\001-set-up-json-render-dashboard-on-localhost/**)",
+      "Read(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude\\worktrees\\tasks\\001-set-up-json-render-dashboard-on-localhost\\.auto-claude\\specs\\001-set-up-json-render-dashboard-on-localhost/**)",
+      "Write(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude\\worktrees\\tasks\\001-set-up-json-render-dashboard-on-localhost\\.auto-claude\\specs\\001-set-up-json-render-dashboard-on-localhost/**)",
+      "Edit(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude\\worktrees\\tasks\\001-set-up-json-render-dashboard-on-localhost\\.auto-claude\\specs\\001-set-up-json-render-dashboard-on-localhost/**)",
+      "Read(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude/**)",
+      "Write(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude/**)",
+      "Edit(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude/**)",
+      "Glob(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude/**)",
+      "Grep(C:\\Users\\Admin\\Documents\\Projects\\qwen-llm\\.auto-claude/**)",
+      "Bash(*)",
+      "WebFetch(*)",
+      "WebSearch(*)",
+      "mcp__context7__resolve-library-id(*)",
+      "mcp__context7__query-docs(*)",
+      "mcp__graphiti-memory__search_nodes(*)",
+      "mcp__graphiti-memory__search_facts(*)",
+      "mcp__graphiti-memory__add_episode(*)",
+      "mcp__graphiti-memory__get_episodes(*)",
+      "mcp__graphiti-memory__get_entity_edge(*)"
+    ]
+  }
+}

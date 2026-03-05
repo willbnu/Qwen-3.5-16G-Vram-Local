@@ -1,3 +1,12 @@
+/**
+ * LLM Chat Dashboard Application
+ *
+ * Root component that wraps the dashboard with JSONUIProvider
+ * from the @json-render ecosystem for schema-driven UI rendering.
+ */
+
+import { JSONUIProvider } from '@json-render/react';
+import { registry } from './registry';
 import { MetricsPanel } from './components/dashboard/MetricsPanel';
 import { CostPanel } from './components/dashboard/CostPanel';
 import { ModelInfoPanel } from './components/dashboard/ModelInfoPanel';
@@ -104,7 +113,11 @@ const sampleDocs = {
   ],
 };
 
-function App() {
+/**
+ * Dashboard content component
+ * Renders all four dashboard panels in a grid layout
+ */
+function DashboardContent() {
   return (
     <div className="min-h-screen bg-background text-foreground">
       <header className="border-b border-border px-6 py-4">
@@ -124,6 +137,18 @@ function App() {
         </div>
       </main>
     </div>
+  );
+}
+
+/**
+ * Main App component
+ * Wraps the dashboard with JSONUIProvider for @json-render ecosystem integration
+ */
+function App() {
+  return (
+    <JSONUIProvider registry={registry}>
+      <DashboardContent />
+    </JSONUIProvider>
   );
 }
 

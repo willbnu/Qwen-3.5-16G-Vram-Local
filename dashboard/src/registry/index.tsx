@@ -7,7 +7,8 @@
  * The registry is used by JSONUIProvider to render JSON specs.
  */
 
-import type { ComponentType, ReactNode } from 'react';
+import type { ReactNode } from 'react';
+import type { ComponentRegistry } from '@json-render/react';
 import { shadcnComponents } from '@json-render/shadcn';
 import type {
   MetricsPanelProps,
@@ -41,28 +42,39 @@ interface BaseRenderProps {
 }
 
 /**
- * Component render props with typed props
+ * Props structure from json-render renderer
+ * Props are accessed through element.props
  */
-type ComponentRenderProps<T> = T & BaseRenderProps;
+interface RenderProps {
+  element: {
+    type: string;
+    props: Record<string, unknown>;
+  };
+  children?: ReactNode;
+  emit: (event: string) => void;
+  on: (event: string) => { emit: () => void; shouldPreventDefault: boolean; bound: boolean };
+  bindings?: Record<string, string>;
+  loading?: boolean;
+}
 
 // ============================================================================
-// Stub Components (Phase 4 will provide full implementations)
+// Dashboard Components
 // ============================================================================
 
 /**
- * Stub component for DashboardLayout
+ * DashboardLayout component
  * Renders a grid layout for dashboard panels
- *
- * @phase 4 - Full implementation in src/components/dashboard/DashboardLayout.tsx
  */
-const DashboardLayout: ComponentType<ComponentRenderProps<DashboardLayoutProps>> = ({
-  title = 'LLM Chat Dashboard',
-  showMetrics = true,
-  showCosts = true,
-  showModelInfo = true,
-  showDocs = true,
-  children,
-}) => {
+function DashboardLayout({ element, children }: RenderProps & BaseRenderProps) {
+  const props = element.props as DashboardLayoutProps;
+  const {
+    title = 'LLM Chat Dashboard',
+    showMetrics = true,
+    showCosts = true,
+    showModelInfo = true,
+    showDocs = true,
+  } = props;
+
   return (
     <div className="min-h-screen bg-background p-6">
       <header className="mb-6">
@@ -97,30 +109,32 @@ const DashboardLayout: ComponentType<ComponentRenderProps<DashboardLayoutProps>>
       {children}
     </div>
   );
-};
+}
 
 /**
  * MetricsPanel component wrapper for registry
  * Uses the full implementation from src/components/dashboard/MetricsPanel.tsx
  */
-const MetricsPanel: ComponentType<ComponentRenderProps<MetricsPanelProps>> = (props) => {
+function MetricsPanel({ element }: RenderProps & BaseRenderProps) {
+  const props = element.props as MetricsPanelProps;
   return <MetricsPanelComponent {...props} />;
-};
+}
 
 /**
- * Stub component for CostPanel
+ * CostPanel component
  * Displays cost/benefit analysis for LLM usage
- *
- * @phase 4 - Full implementation in src/components/dashboard/CostPanel.tsx
  */
-const CostPanel: ComponentType<ComponentRenderProps<CostPanelProps>> = ({
-  inputCost,
-  outputCost,
-  totalCost,
-  costPerRequest,
-  costPer1kTokens,
-  currency = 'USD',
-}) => {
+function CostPanel({ element }: RenderProps & BaseRenderProps) {
+  const props = element.props as CostPanelProps;
+  const {
+    inputCost,
+    outputCost,
+    totalCost,
+    costPerRequest,
+    costPer1kTokens,
+    currency = 'USD',
+  } = props;
+
   const formatCost = (cost: number | undefined): string => {
     if (cost === undefined) return '-';
     return new Intl.NumberFormat('en-US', {
@@ -161,24 +175,25 @@ const CostPanel: ComponentType<ComponentRenderProps<CostPanelProps>> = ({
       </div>
     </div>
   );
-};
+}
 
 /**
- * Stub component for ModelInfoPanel
+ * ModelInfoPanel component
  * Displays current LLM model configuration
- *
- * @phase 4 - Full implementation in src/components/dashboard/ModelInfoPanel.tsx
  */
-const ModelInfoPanel: ComponentType<ComponentRenderProps<ModelInfoPanelProps>> = ({
-  name,
-  provider,
-  port,
-  contextWindow,
-  maxOutput,
-  speed,
-  useCase,
-  version,
-}) => {
+function ModelInfoPanel({ element }: RenderProps & BaseRenderProps) {
+  const props = element.props as ModelInfoPanelProps;
+  const {
+    name,
+    provider,
+    port,
+    contextWindow,
+    maxOutput,
+    speed,
+    useCase,
+    version,
+  } = props;
+
   const speedColors: Record<string, string> = {
     fast: 'text-green-600',
     medium: 'text-yellow-600',
@@ -228,20 +243,21 @@ const ModelInfoPanel: ComponentType<ComponentRenderProps<ModelInfoPanelProps>> =
       </div>
     </div>
   );
-};
+}
 
 /**
- * Stub component for DocsPanel
+ * DocsPanel component
  * Displays organized documentation with categories
- *
- * @phase 4 - Full implementation in src/components/dashboard/DocsPanel.tsx
  */
-const DocsPanel: ComponentType<ComponentRenderProps<DocsPanelProps>> = ({
-  categories,
-  searchQuery,
-  selectedCategoryId,
-  expandedDocId,
-}) => {
+function DocsPanel({ element }: RenderProps & BaseRenderProps) {
+  const props = element.props as DocsPanelProps;
+  const {
+    categories,
+    searchQuery,
+    selectedCategoryId,
+    expandedDocId,
+  } = props;
+
   const totalDocs = categories?.reduce((sum, cat) => sum + cat.entries.length, 0) ?? 0;
 
   return (
@@ -290,22 +306,23 @@ const DocsPanel: ComponentType<ComponentRenderProps<DocsPanelProps>> = ({
       </div>
     </div>
   );
-};
+}
 
 /**
- * Stub component for StatCard
+ * StatCard component
  * Individual statistic display card
- *
- * @phase 4 - May be extracted to separate file if needed
  */
-const StatCard: ComponentType<ComponentRenderProps<StatCardProps>> = ({
-  label,
-  value,
-  unit,
-  description,
-  trend,
-  trendValue,
-}) => {
+function StatCard({ element }: RenderProps & BaseRenderProps) {
+  const props = element.props as StatCardProps;
+  const {
+    label,
+    value,
+    unit,
+    description,
+    trend,
+    trendValue,
+  } = props;
+
   const trendColors: Record<string, string> = {
     up: 'text-green-600',
     down: 'text-red-600',
@@ -331,18 +348,16 @@ const StatCard: ComponentType<ComponentRenderProps<StatCardProps>> = ({
       )}
     </div>
   );
-};
+}
 
 /**
- * Stub component for BenchmarkPanel
+ * BenchmarkPanel component
  * Displays benchmark comparison results
- *
- * @phase 4 - Full implementation if needed
  */
-const BenchmarkPanel: ComponentType<ComponentRenderProps<BenchmarkPanelProps>> = ({
-  results,
-  runAt,
-}) => {
+function BenchmarkPanel({ element }: RenderProps & BaseRenderProps) {
+  const props = element.props as BenchmarkPanelProps;
+  const { results, runAt } = props;
+
   return (
     <div className="rounded-lg border bg-card p-4 shadow-sm">
       <h3 className="mb-3 text-lg font-semibold text-card-foreground">Benchmark Results</h3>
@@ -368,7 +383,7 @@ const BenchmarkPanel: ComponentType<ComponentRenderProps<BenchmarkPanelProps>> =
       </div>
     </div>
   );
-};
+}
 
 // ============================================================================
 // Registry Assembly
@@ -394,7 +409,8 @@ const BenchmarkPanel: ComponentType<ComponentRenderProps<BenchmarkPanelProps>> =
  * }
  * ```
  */
-export const registry = {
+// Internal registry object combining all components
+const _registry = {
   // Custom dashboard components
   DashboardLayout,
   MetricsPanel,
@@ -406,7 +422,33 @@ export const registry = {
 
   // shadcn/ui components (35 available)
   ...shadcnComponents,
-} as const;
+};
+
+/**
+ * Component registry for the LLM Chat Dashboard
+ *
+ * Maps component names from the catalog to their React implementations.
+ * Includes both custom dashboard components and shadcn/ui components.
+ *
+ * Note: Type assertion is used because shadcn components use BaseComponentProps
+ * while ComponentRegistry expects ComponentRenderProps. At runtime, the renderer
+ * handles both patterns correctly.
+ *
+ * @example
+ * ```tsx
+ * import { JSONUIProvider } from '@json-render/react';
+ * import { registry } from './registry';
+ *
+ * function App() {
+ *   return (
+ *     <JSONUIProvider registry={registry}>
+ *       <Renderer spec={spec} registry={registry} />
+ *     </JSONUIProvider>
+ *   );
+ * }
+ * ```
+ */
+export const registry: ComponentRegistry = _registry as unknown as ComponentRegistry;
 
 /**
  * Type of the component registry

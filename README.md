@@ -157,9 +157,9 @@ The mmproj (vision projection) adds ~0.9 GB VRAM overhead but **does NOT slow do
 
 **1. Get llama.cpp**
 
-> **🚀 OPTION A (Recommended):** This repo already includes a pre-built SM120 native binary at `llama.cpp/build-sm120/bin/Release/llama-server.exe` — optimized for RTX 5080/5090 with no JIT warmup!
+> **🚀 OPTION A (RTX 5080/5090 only):** Build llama.cpp from source with SM120 support for native Blackwell kernels (eliminates JIT warmup). See [Native Build Guide](docs/RTX5080-NATIVE-BUILD.md).
 
-> **⚠️ OPTION B:** Download the latest CUDA release from [llama.cpp releases](https://github.com/ggml-org/llama.cpp/releases):
+> **⚠️ OPTION B (All GPUs):** Download the latest CUDA release from [llama.cpp releases](https://github.com/ggml-org/llama.cpp/releases):
 
 | Platform | Download                                |
 | -------- | --------------------------------------- |
@@ -234,10 +234,8 @@ start_servers_speed.bat quality
 <td>
 
 ```bash
-# OPTION A: Use included SM120 native build (RTX 5080/5090 recommended)
-./llama.cpp/build-sm120/bin/Release/llama-server.exe \
-
-# OPTION B: Or use prebuilt (for RTX 30xx/40xx)
+# Download and extract llama.cpp to ./llama-bin/
+# Then run the server:
 ./llama-bin/llama-server \
   -m ./models/unsloth-gguf/Qwen3.5-35B-A3B-Q3_K_S.gguf \
   --mmproj ./models/unsloth-gguf/mmproj-35B-F16.gguf \

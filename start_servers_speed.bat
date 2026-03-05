@@ -23,8 +23,27 @@ REM ============================================
 set PROFILE=%~1
 if "%PROFILE%"=="" set PROFILE=coding
 
-REM --- Edit these paths to match your installation ---
+REM --- Detect llama.cpp binary (SM120 native > prebuilt fallback) ---
 set LLAMA_DIR=%~dp0llama.cpp\build-sm120\bin\Release
+if not exist "%LLAMA_DIR%\llama-server.exe" (
+    echo [INFO] SM120 native build not found, checking prebuilt...
+    set LLAMA_DIR=%~dp0llama-bin
+)
+if not exist "%LLAMA_DIR%\llama-server.exe" (
+    echo.
+    echo [ERROR] llama-server.exe not found!
+    echo.
+    echo   Checked:
+    echo     - %~dp0llama.cpp\build-sm120\bin\Release
+    echo     - %~dp0llama-bin
+    echo.
+    echo   Fix: Download llama.cpp from https://github.com/ggml-org/llama.cpp/releases
+    echo   Extract to .\llama-bin\ folder.
+    echo.
+    pause
+    exit /b 1
+)
+echo [INFO] Using: %LLAMA_DIR%
 set MODELS_DIR=%~dp0models\unsloth-gguf
 set LOGS_DIR=%~dp0logs
 

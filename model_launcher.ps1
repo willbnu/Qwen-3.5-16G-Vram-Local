@@ -4,7 +4,30 @@
 param([string]$Model = "35b")
 
 $ROOT    = Split-Path $MyInvocation.MyCommand.Path
-$EXE     = "$ROOT\llama.cpp\build-sm120\bin\Release\llama-server.exe"
+$EXE_SM120 = "$ROOT\llama.cpp\build-sm120\bin\Release\llama-server.exe"
+$EXE_PREBUILT = "$ROOT\llama-bin\llama-server.exe"
+
+# Detect binary: SM120 native > prebuilt fallback
+if (Test-Path $EXE_SM120) {
+    $EXE = $EXE_SM120
+    Write-Host "[INFO] Using SM120 native build" -ForegroundColor Green
+} elseif (Test-Path $EXE_PREBUILT) {
+    $EXE = $EXE_PREBUILT
+    Write-Host "[INFO] Using prebuilt binary" -ForegroundColor Yellow
+} else {
+    Write-Host ""
+    Write-Host "[ERROR] llama-server.exe not found!" -ForegroundColor Red
+    Write-Host ""
+    Write-Host "  Checked:" -ForegroundColor Gray
+    Write-Host "    - $EXE_SM120"
+    Write-Host "    - $EXE_PREBUILT"
+    Write-Host ""
+    Write-Host "  Fix: Download from https://github.com/ggml-org/llama.cpp/releases" -ForegroundColor Cyan
+    Write-Host "  Extract to .\llama-bin\ folder."
+    Write-Host ""
+    exit 1
+}
+
 $MODELS  = "$ROOT\models\unsloth-gguf"
 $LOGDIR  = "$ROOT\logs"
 

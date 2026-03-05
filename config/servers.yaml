@@ -5,8 +5,13 @@
 
 # Directory Paths — edit these to match your installation
 # Use absolute paths or paths relative to the repo root
+#
+# NOTE: SM120 native build is OPTIONAL (RTX 5080/5090 only)
+# For most users: download prebuilt binary to ./llama-bin/
+# Batch scripts auto-detect: SM120 > llama-bin fallback
 paths:
-  llama_dir: "./llama.cpp/build-sm120/bin/Release" # SM120 native build
+  llama_dir: "./llama-bin" # Default: prebuilt binary (works for all GPUs)
+  # llama_dir: "./llama.cpp/build-sm120/bin/Release"  # RTX 5080/5090 only
   models_dir: "./models/unsloth-gguf" # folder containing .gguf files
   logs_dir: "./logs"
   results_dir: "./results"

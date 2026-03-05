@@ -20,8 +20,11 @@ import type {
   BenchmarkPanelProps,
 } from '../catalog';
 
-// Import real dashboard components
+// Import all real dashboard components
 import { MetricsPanel as MetricsPanelComponent } from '../components/dashboard/MetricsPanel';
+import { CostPanel as CostPanelComponent } from '../components/dashboard/CostPanel';
+import { ModelInfoPanel as ModelInfoPanelComponent } from '../components/dashboard/ModelInfoPanel';
+import { DocsPanel as DocsPanelComponent } from '../components/dashboard/DocsPanel';
 
 // ============================================================================
 // Types for Component Props
@@ -58,7 +61,7 @@ interface RenderProps {
 }
 
 // ============================================================================
-// Dashboard Components
+// Dashboard Components - Wrappers for Full Implementations
 // ============================================================================
 
 /**
@@ -84,25 +87,21 @@ function DashboardLayout({ element, children }: RenderProps & BaseRenderProps) {
         {showMetrics && (
           <div className="rounded-lg border bg-card p-4 shadow-sm">
             <div className="text-sm text-muted-foreground">Metrics Panel</div>
-            <div className="text-xs text-muted-foreground/60">(Component pending)</div>
           </div>
         )}
         {showCosts && (
           <div className="rounded-lg border bg-card p-4 shadow-sm">
             <div className="text-sm text-muted-foreground">Cost Panel</div>
-            <div className="text-xs text-muted-foreground/60">(Component pending)</div>
           </div>
         )}
         {showModelInfo && (
           <div className="rounded-lg border bg-card p-4 shadow-sm">
             <div className="text-sm text-muted-foreground">Model Info Panel</div>
-            <div className="text-xs text-muted-foreground/60">(Component pending)</div>
           </div>
         )}
         {showDocs && (
           <div className="rounded-lg border bg-card p-4 shadow-sm">
             <div className="text-sm text-muted-foreground">Docs Panel</div>
-            <div className="text-xs text-muted-foreground/60">(Component pending)</div>
           </div>
         )}
       </div>
@@ -121,191 +120,30 @@ function MetricsPanel({ element }: RenderProps & BaseRenderProps) {
 }
 
 /**
- * CostPanel component
- * Displays cost/benefit analysis for LLM usage
+ * CostPanel component wrapper for registry
+ * Uses the full implementation from src/components/dashboard/CostPanel.tsx
  */
 function CostPanel({ element }: RenderProps & BaseRenderProps) {
   const props = element.props as CostPanelProps;
-  const {
-    inputCost,
-    outputCost,
-    totalCost,
-    costPerRequest,
-    costPer1kTokens,
-    currency = 'USD',
-  } = props;
-
-  const formatCost = (cost: number | undefined): string => {
-    if (cost === undefined) return '-';
-    return new Intl.NumberFormat('en-US', {
-      style: 'currency',
-      currency,
-      minimumFractionDigits: 4,
-    }).format(cost);
-  };
-
-  return (
-    <div className="rounded-lg border bg-card p-4 shadow-sm">
-      <h3 className="mb-3 text-lg font-semibold text-card-foreground">Cost Analysis</h3>
-      <div className="grid grid-cols-2 gap-3 text-sm">
-        <div>
-          <span className="text-muted-foreground">Input Cost:</span>{' '}
-          <span className="font-mono font-medium">{formatCost(inputCost)}</span>
-        </div>
-        <div>
-          <span className="text-muted-foreground">Output Cost:</span>{' '}
-          <span className="font-mono font-medium">{formatCost(outputCost)}</span>
-        </div>
-        <div className="col-span-2 border-t pt-2">
-          <span className="text-muted-foreground">Total Cost:</span>{' '}
-          <span className="font-mono text-lg font-bold text-primary">{formatCost(totalCost)}</span>
-        </div>
-        {costPerRequest !== undefined && costPerRequest !== null && (
-          <div>
-            <span className="text-muted-foreground">Per Request:</span>{' '}
-            <span className="font-mono font-medium">{formatCost(costPerRequest)}</span>
-          </div>
-        )}
-        {costPer1kTokens !== undefined && costPer1kTokens !== null && (
-          <div>
-            <span className="text-muted-foreground">Per 1K Tokens:</span>{' '}
-            <span className="font-mono font-medium">{formatCost(costPer1kTokens)}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  return <CostPanelComponent {...props} />;
 }
 
 /**
- * ModelInfoPanel component
- * Displays current LLM model configuration
+ * ModelInfoPanel component wrapper for registry
+ * Uses the full implementation from src/components/dashboard/ModelInfoPanel.tsx
  */
 function ModelInfoPanel({ element }: RenderProps & BaseRenderProps) {
   const props = element.props as ModelInfoPanelProps;
-  const {
-    name,
-    provider,
-    port,
-    contextWindow,
-    maxOutput,
-    speed,
-    useCase,
-    version,
-  } = props;
-
-  const speedColors: Record<string, string> = {
-    fast: 'text-green-600',
-    medium: 'text-yellow-600',
-    slow: 'text-orange-600',
-  };
-
-  return (
-    <div className="rounded-lg border bg-card p-4 shadow-sm">
-      <h3 className="mb-3 text-lg font-semibold text-card-foreground">Model Information</h3>
-      <div className="space-y-2 text-sm">
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Name:</span>
-          <span className="font-medium">{name ?? 'Not configured'}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Provider:</span>
-          <span className="font-medium">{provider ?? 'Not configured'}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Port:</span>
-          <span className="font-mono font-medium">{port ?? '-'}</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Context Window:</span>
-          <span className="font-mono font-medium">{contextWindow?.toLocaleString() ?? '-'} tokens</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Max Output:</span>
-          <span className="font-mono font-medium">{maxOutput?.toLocaleString() ?? '-'} tokens</span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Speed:</span>
-          <span className={`font-medium capitalize ${speed ? speedColors[speed] ?? '' : ''}`}>
-            {speed ?? '-'}
-          </span>
-        </div>
-        <div className="flex justify-between">
-          <span className="text-muted-foreground">Use Case:</span>
-          <span className="font-medium text-right max-w-[60%]">{useCase ?? '-'}</span>
-        </div>
-        {version && (
-          <div className="flex justify-between">
-            <span className="text-muted-foreground">Version:</span>
-            <span className="font-mono font-medium">{version}</span>
-          </div>
-        )}
-      </div>
-    </div>
-  );
+  return <ModelInfoPanelComponent {...props} />;
 }
 
 /**
- * DocsPanel component
- * Displays organized documentation with categories
+ * DocsPanel component wrapper for registry
+ * Uses the full implementation from src/components/dashboard/DocsPanel.tsx
  */
 function DocsPanel({ element }: RenderProps & BaseRenderProps) {
   const props = element.props as DocsPanelProps;
-  const {
-    categories,
-    searchQuery,
-    selectedCategoryId,
-    expandedDocId,
-  } = props;
-
-  const totalDocs = categories?.reduce((sum, cat) => sum + cat.entries.length, 0) ?? 0;
-
-  return (
-    <div className="rounded-lg border bg-card p-4 shadow-sm">
-      <h3 className="mb-3 text-lg font-semibold text-card-foreground">Documentation</h3>
-      {searchQuery && (
-        <div className="mb-2 text-sm text-muted-foreground">
-          Search: "{searchQuery}"
-        </div>
-      )}
-      <div className="space-y-3">
-        {categories?.map((category) => (
-          <div key={category.id} className="border-b pb-2 last:border-b-0">
-            <div
-              className={`cursor-pointer font-medium ${
-                selectedCategoryId === category.id ? 'text-primary' : 'text-foreground'
-              }`}
-            >
-              {category.name}
-              <span className="ml-2 text-xs text-muted-foreground">
-                ({category.entries.length} docs)
-              </span>
-            </div>
-            {category.description && (
-              <p className="mt-1 text-xs text-muted-foreground">{category.description}</p>
-            )}
-            {selectedCategoryId === category.id && (
-              <ul className="mt-2 space-y-1 pl-4">
-                {category.entries.map((entry) => (
-                  <li
-                    key={entry.id}
-                    className={`cursor-pointer text-sm ${
-                      expandedDocId === entry.id ? 'font-medium text-primary' : 'text-muted-foreground'
-                    }`}
-                  >
-                    {entry.title}
-                  </li>
-                ))}
-              </ul>
-            )}
-          </div>
-        ))}
-      </div>
-      <div className="mt-3 text-xs text-muted-foreground">
-        {totalDocs} documents in {categories?.length ?? 0} categories
-      </div>
-    </div>
-  );
+  return <DocsPanelComponent {...props} />;
 }
 
 /**
@@ -390,28 +228,10 @@ function BenchmarkPanel({ element }: RenderProps & BaseRenderProps) {
 // ============================================================================
 
 /**
- * Component registry for the LLM Chat Dashboard
- *
- * Maps component names from the catalog to their React implementations.
- * Includes both custom dashboard components and shadcn/ui components.
- *
- * @example
- * ```tsx
- * import { JSONUIProvider } from '@json-render/react';
- * import { registry } from './registry';
- *
- * function App() {
- *   return (
- *     <JSONUIProvider registry={registry}>
- *       <Renderer spec={spec} registry={registry} />
- *     </JSONUIProvider>
- *   );
- * }
- * ```
+ * Internal registry object combining all components
  */
-// Internal registry object combining all components
 const _registry = {
-  // Custom dashboard components
+  // Custom dashboard components (using full implementations)
   DashboardLayout,
   MetricsPanel,
   CostPanel,
@@ -436,7 +256,7 @@ const _registry = {
  *
  * @example
  * ```tsx
- * import { JSONUIProvider } from '@json-render/react';
+ * import { JSONUIProvider, Renderer } from '@json-render/react';
  * import { registry } from './registry';
  *
  * function App() {

@@ -205,7 +205,7 @@ class TestSingletonFunctions:
         """Test get_all_servers returns all servers"""
         from config_loader import get_all_servers
         servers = get_all_servers()
-        assert len(servers) == 5
+        assert len(servers) == 6
 
     def test_singleton_get_server(self):
         """Test module-level get_server function"""

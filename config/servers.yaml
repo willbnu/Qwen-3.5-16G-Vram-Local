@@ -74,6 +74,29 @@ servers:
     use_case: "fast_vision"
     description: "Full 256K context, q8_0 KV, ~97.5 t/s avg / 112 t/s peak, 5.4 GB headroom"
 
+  # 1M CONTEXT SERVER - 9B with maximum context window
+  # Uses iq4_nl KV for smaller footprint (trades some speed for 4x context)
+  mega_context:
+    enabled: false # Enable for 1M context experiments
+    port: 8007
+    name: "Qwen3.5-9B-MegaContext"
+    model: "Qwen3.5-9B-UD-Q4_K_XL.gguf"
+    mmproj: "mmproj-F16.gguf"
+    config:
+      context: 1048576 # 1M tokens - THEORETICAL MAX with iq4_nl
+      gpu_layers: 99
+      flash_attn: "on"
+      cache_type_k: "iq4_nl" # Smaller KV footprint for massive context
+      cache_type_v: "iq4_nl"
+      temp: 0.7
+      top_p: 0.8
+      top_k: 20
+      presence_penalty: 1.5
+      enable_thinking: false
+    vram_estimate_gb: 14.5 # 5.0 model + 0.9 mmproj + ~8.6 KV + compute
+    use_case: "mega_context"
+    description: "9B with ~1M context using iq4_nl KV — trades speed for massive context window"
+
   # QUALITY SERVER - 27B Q3_K_S dense — OPTIMIZED 46 t/s with 96K context
   # Dense model: all 27B params active per token (best quality/token)
   quality_vision:

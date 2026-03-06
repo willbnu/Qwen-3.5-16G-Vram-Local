@@ -1,6 +1,7 @@
 # AGENTS.md
 
 **Project**: qwen-llm (Qwen3.5 Local LLM on 16GB GPU)
+**Version**: 1.4.0
 **Purpose**: Configuration, benchmarking, and tooling for running Qwen3.5 models locally
 
 ---
@@ -150,11 +151,9 @@ qwen-llm/
 
 | Profile | Port | Model | Speed | Context | Best For |
 |---------|------|-------|-------|---------|----------|
-| **Coding** | 8002 | Qwen3.5-35B-A3B Q3_K_S | ~120 t/s | 32K | Primary coding, reasoning |
-| **Vision** | 8003 | Qwen3.5-9B Q4_K_XL | ~97 t/s | 256K | Fast vision, chat |
-| **Quality** | 8004 | Qwen3.5-27B Q3_K_S | ~36 t/s | 64K | Best reasoning quality |
-
-> **Note**: Context sizes differ between batch scripts (conservative) and YAML config (larger). Batch scripts use 32K/64K for stability; YAML config has 120K/96K values. Both work — choose based on your needs.
+| **Coding** | 8002 | Qwen3.5-35B-A3B Q3_K_S | ~125 t/s | 120K | Primary coding, reasoning |
+| **Fast Vision** | 8003 | Qwen3.5-9B UD-Q4_K_XL | ~97 t/s | 256K | Fast vision, chat |
+| **Quality** | 8004 | Qwen3.5-27B Q3_K_S | ~46 t/s | 96K | Best reasoning quality |
 
 ### Critical Configuration Notes
 
@@ -229,21 +228,69 @@ response = api_9b_vision.vision(
 )
 ```
 
+### Terminal Chat Client (chat.py)
+
+```bash
+# Start interactive chat (default: port 8002)
+python chat.py
+
+# Use different model
+python chat.py --port 8003
+
+# Custom system prompt
+python chat.py --system "You are a coding expert."
+```
+
+**In-chat commands:**
+- `/quit` or `/exit` — exit chat
+- `/clear` — clear conversation history
+- `/speed` — show last generation speed (t/s)
+- `/system <text>` — change system prompt mid-session
+- `/img <path> [question]` — send image for vision analysis
+- `/help` — show all commands
+
+**Image handling:**
+- Auto-resizes to 768px longest side (matches ViT tile size)
+- Requires `Pillow` for auto-resize: `pip install Pillow`
+- Without Pillow: images sent at full size (slower, more tokens)
+
 ### React/TypeScript (Dashboard)
 
-- React 19 + TypeScript
-- Vite for build
+- React 19 + TypeScript 5.5
+- Vite 5 for build
 - Zustand v5 with immer middleware for state management
 - Tailwind CSS v4 for styling
-- Component specs in `src/specs/` using JSON-Render
-- Store pattern: `useAppStore()` with selectors for optimized re-renders
+- JSON-Render library for component specs (`@json-render/*`)
 
+**Store pattern:**
 ```tsx
-// Using the store
-import { useAppStore, selectMetrics } from './store/useAppStore';
+// src/store/useAppStore.ts - Zustand with immer middleware
+import { useAppStore, selectMetrics, selectCosts, selectModel } from './store/useAppStore';
 
+// Get state with selector for optimized re-renders
 const metrics = useAppStore(selectMetrics);
-const { setMetrics } = useAppStore();
+
+// Get actions
+const { setMetrics, setCosts, setModel, reset } = useAppStore();
+
+// Update state
+setMetrics({ totalTokens: 1000, genTps: 125.8 });
+```
+
+**Store structure:**
+- `StoreMetrics`: totalTokens, promptTokens, completionTokens, requestsCount, genTps, promptTps
+- `StoreCosts`: inputCost, outputCost, totalCost, costPerRequest, costPer1kTokens
+- `StoreModelInfo`: name, provider, contextWindow, maxOutput, port, speed, useCase
+- `StoreAppActions`: setMetrics, setCosts, setModel, setDocs, setBenchmarks, reset
+
+**Dashboard commands:**
+```bash
+cd dashboard
+npm install       # Install dependencies
+npm run dev       # Development server (Vite)
+npm run build     # Production build (tsc + vite build)
+npm run lint      # ESLint check
+npx tsc --noEmit  # Type check only
 ```
 
 ---
@@ -334,10 +381,23 @@ Defined in `config/servers.yaml` under `quality_tests`:
 - Keep messages concise and descriptive
 
 ### Code Quality
-- Run `pytest tests/` before committing changes to Python code
-- Run `npm run lint` in dashboard/ before committing TypeScript changes
+- Run `pytest tests/test_config_loader.py -v` before committing Python changes
+- Run `npm run build` in dashboard/ before committing TypeScript changes
+- Run `npx tsc --noEmit` for type checking
 - Type hints required on all public Python functions
 - TypeScript strict mode enabled in dashboard
+
+### Testing
+```bash
+# Python unit tests
+pytest tests/test_config_loader.py -v
+
+# Health check (requires running servers)
+python tests/health_check.py
+
+# Benchmarks (requires running servers)
+python tests/simple_benchmark.py 8002
+```
 
 ---
 
@@ -429,3 +489,21 @@ huggingface-cli download unsloth/Qwen3.5-27B-GGUF \
 Or use the helper script: `download_model.ps1`
 
 > **Note**: mmproj filenames differ by model. Check `config/servers.yaml` for exact filenames.
+
+---
+
+## CI/CD
+
+GitHub Actions workflow (`.github/workflows/test.yml`) runs on push/PR to main:
+
+- **Python Tests**: pytest on Python 3.11/3.12 (`pytest tests/test_config_loader.py -v`)
+- **Dashboard Build**: npm ci + npm run build + TypeScript check
+
+Local CI commands:
+```bash
+# Python tests
+pytest tests/test_config_loader.py -v
+
+# Dashboard build + type check
+cd dashboard && npm ci && npm run build && npx tsc --noEmit
+```

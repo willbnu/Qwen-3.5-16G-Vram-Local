@@ -67,10 +67,11 @@ echo ============================================
 echo  CODING PROFILE: 35B-A3B Q3_K_S (Port 8002)
 echo  MoE: only 3B active params per token
 echo  Speed: ~120 t/s gen / ~500 t/s prompt
-echo  Context: 120K (122,880 tokens)
+echo  Context: 32K (32,768 tokens) - GPU memory limit
 echo  KV: iq4_nl  Vision: YES
 echo  VRAM: ~15.4GB
 echo  NOTE: --parallel 1 is CRITICAL for 120+ t/s (GDN hybrid arch)
+echo  NOTE: 32K context is max for full GPU performance on 16GB VRAM
 echo ============================================
 echo.
 start "Qwen3.5-35B-A3B-Coding" /min cmd /c ^
@@ -78,11 +79,11 @@ start "Qwen3.5-35B-A3B-Coding" /min cmd /c ^
     -m "%MODELS_DIR%\Qwen3.5-35B-A3B-Q3_K_S.gguf" ^
     --mmproj "%MODELS_DIR%\mmproj-35B-F16.gguf" ^
     --host 127.0.0.1 --port 8002 ^
-    -c 122880 ^
+    -c 32768 ^
     -ngl 99 ^
     --flash-attn on ^
     -ctk iq4_nl -ctv iq4_nl ^
-    --parallel 1 ^
+    --parallel 1 --reasoning-budget 0 ^
     --temp 0.6 --top-p 0.95 --top-k 20 ^
     --presence-penalty 0.0 ^
     --reasoning-budget 0 ^

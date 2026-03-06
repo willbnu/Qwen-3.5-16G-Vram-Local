@@ -4,7 +4,7 @@
 
 <p><strong>Maximum-speed local LLM on consumer hardware — 125 t/s with 152K context, <ins>multimodal vision enabled</ins>, fully documented.</strong></p>
 
-<p><em>🖼️ See images · 📄 Read PDFs · 🖥️ Analyze screenshots — all at 125 t/s on 16GB VRAM</em></p>
+<p><em>See images · Read PDFs · Analyze screenshots — all at 125 t/s on 16GB VRAM</em></p>
 
 <p><em>Tested on RTX 5080 · Works on any NVIDIA 16GB (RTX 30xx / 40xx / 50xx)</em></p>
 
@@ -15,7 +15,7 @@
     <td align="center"><b>⚡ Avg Speed</b></td>
     <td align="center"><b>🏎️ Peak Speed</b></td>
     <td align="center"><b>🧠 Context</b></td>
-    <td align="center"><b>🖼️ Vision</b></td>
+    <td align="center"><b>Vision</b></td>
     <td align="center"><b>🎮 GPU Layers</b></td>
     <td align="center"><b>💾 VRAM</b></td>
   </tr>
@@ -53,74 +53,74 @@
 
 ---
 
-## 🗺️ Quick Navigation
+## Quick Navigation
 
 | I want to...                        | Go to                                                      |
 | ----------------------------------- | ---------------------------------------------------------- |
-| 🏃 **Get running fast**             | [Quick Start](#-quick-start)                               |
-| 🖼️ **Use vision/multimodal**        | [Vision & Multimodal](#️-vision--multimodal--fully-working) |
-| 📊 **See benchmark numbers**        | [Key Results](#-key-results)                               |
-| 🔍 **Understand the context cliff** | [The Discovery](#️-the-discovery-155904-token-cliff)        |
+| **Get running fast**             | [Quick Start](#-quick-start)                               |
+| **Use vision/multimodal**        | [Vision & Multimodal](#️-vision--multimodal--fully-working) |
+| **See benchmark numbers**        | [Key Results](#-key-results)                               |
+| **Understand the context cliff** | [The Discovery](#️-the-discovery-155904-token-cliff)        |
 | ⚙️ **Copy server configs**          | [Server Configs](#-all-three-server-configs)               |
-| 🧬 **Learn why MoE is fast**        | [MoE Explained](#-why-the-35b-moe-is-faster-than-it-looks) |
-| 🗜️ **Pick the right quant**         | [Quantization Notes](#-quantization-notes)                 |
-| 🖥️ **Check GPU compatibility**      | [Hardware Notes](#-hardware-notes)                         |
-| 🔨 **Build for RTX 5080/5090**      | [Native Build Guide](docs/RTX5080-NATIVE-BUILD.md)         |
-| 📈 **Run benchmarks**               | [Benchmarking](#-benchmarking)                             |
+| **Learn why MoE is fast**        | [MoE Explained](#-why-the-35b-moe-is-faster-than-it-looks) |
+| **Pick the right quant**         | [Quantization Notes](#-quantization-notes)                 |
+| **Check GPU compatibility**      | [Hardware Notes](#-hardware-notes)                         |
+| **Build for RTX 5080/5090**      | [Native Build Guide](docs/RTX5080-NATIVE-BUILD.md)         |
+| **Run benchmarks**               | [Benchmarking](#-benchmarking)                             |
 
 ---
 
-## 📦 What's In Here
+## What's In Here
 
 A production-tested [llama.cpp](https://github.com/ggml-org/llama.cpp) setup for **[Qwen3.5-35B-A3B](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF)** (MoE) on **any NVIDIA 16GB GPU** — everything you need to hit max speed locally:
 
 - ✅ **Verified numbers** — every benchmark run fresh, no aspirational figures → [See results](results/BENCHMARK_RESULTS.md)
-- ✅ **🖼️ Vision & Multimodal** — images, PDFs, screenshots, diagrams — all working at full speed
-- 🔍 **Context cliff discovery** — the exact token count where 16GB GPUs hit a wall → [Full write-up](DISCOVERY.md)
-- 🎛️ **Three ready-to-run profiles** — coding · fast vision · quality → [Configs](#-all-three-server-configs)
-- 📁 **Drop-in scripts** — Windows `.bat` launchers, Python benchmarks, health checks
+- ✅ **Vision & Multimodal** — images, PDFs, screenshots, diagrams — all working at full speed
+- **Context cliff discovery** — the exact token count where 16GB GPUs hit a wall → [Full write-up](DISCOVERY.md)
+- **Three ready-to-run profiles** — coding · fast vision · quality → [Configs](#-all-three-server-configs)
+- **Drop-in scripts** — Windows `.bat` launchers, Python benchmarks, health checks
 
 > **Works on:** [RTX 3060 Ti 16GB](https://www.nvidia.com/en-us/geforce/graphics-cards/30-series/rtx-3060-3060ti/) · [RTX 4060 Ti 16GB](https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4060-4060ti/) · [RTX 4070 Ti Super](https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4070-4070ti-super/) · [RTX 4080](https://www.nvidia.com/en-us/geforce/graphics-cards/40-series/rtx-4080/) · [RTX 5080](https://www.nvidia.com/en-us/geforce/graphics-cards/50-series/rtx-5080/) · Any NVIDIA 16GB+
 
 ---
 
-## 📊 Key Results
+## Key Results
 
-### 🥇 35B-A3B Q3_K_S — Coding Server (Best Config)
+### 35B-A3B Q3_K_S — Coding Server (Best Config)
 
 | Metric              | Value                                                                             |
 | ------------------- | --------------------------------------------------------------------------------- |
 | ⚡ Generation speed | **125.8 t/s avg · 192 t/s peak** (with `--parallel 1`)                            |
-| 📥 Prompt ingestion | **538 t/s**                                                                       |
+| Prompt ingestion | **538 t/s**                                                                       |
 | 🧠 Context window   | **120K tokens (155K max) (≈152K)**                                                |
-| 👁️ Vision           | **Yes** — [mmproj](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF) loaded    |
+| Vision           | **Yes** — [mmproj](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF) loaded    |
 | 💾 VRAM used        | **15.4 GB** (245 MB free)                                                         |
 | 🎮 GPU layers       | **41 / 41** — fully on GPU                                                        |
-| 🗜️ KV cache         | [iq4_nl](docs/KV_CACHE_ANALYSIS.md) — only **856 MB** at 152K                     |
-| 📦 Model size       | 14.2 GB ([Q3_K_S](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF), 3.94 bpw) |
+| KV cache         | [iq4_nl](docs/KV_CACHE_ANALYSIS.md) — only **856 MB** at 152K                     |
+| Model size       | 14.2 GB ([Q3_K_S](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF), 3.94 bpw) |
 
-### 🔀 All Three Profiles Compared
+### All Three Profiles Compared
 
 | Profile            | Model                                                                     | Port |  ⚡ Speed   | 🧠 Context | 💾 VRAM | Config                                   |
 | ------------------ | ------------------------------------------------------------------------- | :--: | :---------: | :--------: | :-----: | ---------------------------------------- |
-| 🖥️ **Coding**      | [35B-A3B Q3_K_S](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF)     | 8002 | **125 t/s** |  **152K**  | 15.4 GB | [→](#️-coding--35b-a3b-q3_k_s-port-8002)  |
-| 👁️ **Vision/Chat** | [9B Q4_K_XL](https://huggingface.co/unsloth/Qwen2.5-VL-9B-Instruct-GGUF)  | 8003 | **97 t/s**  |  **256K**  | 10.6 GB | [→](#️-fast-vision--9b-q4_k_xl-port-8003) |
-| 🎯 **Quality**     | [27B Q3_K_S](https://huggingface.co/unsloth/Qwen2.5-VL-27B-Instruct-GGUF) | 8004 | **46 t/s**  |    96K     | 14.5 GB | [→](#️-quality--27b-q3_k_s-port-8004)     |
+| **Coding**      | [35B-A3B Q3_K_S](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF)     | 8002 | **125 t/s** |  **152K**  | 15.4 GB | [→](#️-coding--35b-a3b-q3_k_s-port-8002)  |
+| **Vision/Chat** | [9B Q4_K_XL](https://huggingface.co/unsloth/Qwen2.5-VL-9B-Instruct-GGUF)  | 8003 | **97 t/s**  |  **256K**  | 10.6 GB | [→](#️-fast-vision--9b-q4_k_xl-port-8003) |
+| **Quality**     | [27B Q3_K_S](https://huggingface.co/unsloth/Qwen2.5-VL-27B-Instruct-GGUF) | 8004 | **46 t/s**  |    96K     | 14.5 GB | [→](#️-quality--27b-q3_k_s-port-8004)     |
 
 > **⚠️ One server at a time.** The 35B alone uses 15.4 GB — no two models fit in 16 GB simultaneously.
 
 ---
 
-## 🖼️ Vision & Multimodal — Fully Working
+## Vision & Multimodal — Fully Working
 
 This isn't just text. All three models support **vision/multimodal input** out of the box:
 
 | Capability                  |   35B-A3B   |     9B     |    27B     |
 | --------------------------- | :---------: | :--------: | :--------: |
-| 🖼️ Image analysis           |     ✅      |     ✅     |     ✅     |
-| 📄 PDF reading              |     ✅      |     ✅     |     ✅     |
-| 🖥️ Screenshot understanding |     ✅      |     ✅     |     ✅     |
-| 📊 Chart/diagram analysis   |     ✅      |     ✅     |     ✅     |
+| Image analysis           |     ✅      |     ✅     |     ✅     |
+| PDF reading              |     ✅      |     ✅     |     ✅     |
+| Screenshot understanding |     ✅      |     ✅     |     ✅     |
+| Chart/diagram analysis   |     ✅      |     ✅     |     ✅     |
 | 🎥 Video frame analysis     |     ✅      |     ✅     |     ✅     |
 | Speed with vision           | **120 t/s** | **97 t/s** | **46 t/s** |
 
@@ -202,7 +202,7 @@ huggingface-cli download unsloth/Qwen2.5-VL-27B-Instruct-GGUF \
 
 Or use the included helper: [`download_model.ps1`](download_model.ps1)
 
-> 🤗 **Direct downloads:** [35B-A3B](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF) · [9B-VL](https://huggingface.co/unsloth/Qwen2.5-VL-9B-Instruct-GGUF) · [27B-VL](https://huggingface.co/unsloth/Qwen2.5-VL-27B-Instruct-GGUF)
+> **Direct downloads:** [35B-A3B](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF) · [9B-VL](https://huggingface.co/unsloth/Qwen2.5-VL-9B-Instruct-GGUF) · [27B-VL](https://huggingface.co/unsloth/Qwen2.5-VL-27B-Instruct-GGUF)
 
 **3. Python** (benchmark scripts only) — 3.11+ with:
 
@@ -324,7 +324,7 @@ This buffer grows with context size. Between 155,904 and 156,160 tokens, it cros
 
 **This is specific to hybrid recurrent architectures.** Pure transformer models (Qwen 9B, 27B) don't have this constraint — they don't use Gated DeltaNet layers and have no recurrent state PCIe transfers.
 
-📄 **Full technical write-up with reproduce steps:** [`DISCOVERY.md`](DISCOVERY.md)
+**Full technical write-up with reproduce steps:** [`DISCOVERY.md`](DISCOVERY.md)
 
 ---
 
@@ -347,9 +347,9 @@ This buffer grows with context size. Between 155,904 and 156,160 tokens, it cros
 
 ---
 
-## 🎛️ All Three Server Configs
+## All Three Server Configs
 
-### 🖥️ Coding — 35B-A3B Q3_K_S (Port 8002)
+### Coding — 35B-A3B Q3_K_S (Port 8002)
 
 ```bash
 -m Qwen3.5-35B-A3B-Q3_K_S.gguf
@@ -370,7 +370,7 @@ This buffer grows with context size. Between 155,904 and 156,160 tokens, it cros
 
 ---
 
-### 👁️ Fast Vision — 9B Q4_K_XL (Port 8003)
+### Fast Vision — 9B Q4_K_XL (Port 8003)
 
 ```bash
 -m Qwen2.5-VL-9B-Instruct-Q4_K_XL.gguf
@@ -384,7 +384,7 @@ Full 256K context ([model native max](https://huggingface.co/Qwen/Qwen2.5-VL-9B-
 
 ---
 
-### 🎯 Quality — 27B Q3_K_S (Port 8004)
+### Quality — 27B Q3_K_S (Port 8004)
 
 ```bash
 -m Qwen3.5-27B-Q3_K_S.gguf
@@ -401,7 +401,7 @@ Dense model — **all 27B parameters active per token** (no MoE sparsity). Gener
 
 ---
 
-## 🧬 Why the 35B MoE Is Faster Than It Looks
+## Why the 35B MoE Is Faster Than It Looks
 
 The "35B" label is misleading. Here's the actual compute:
 
@@ -429,7 +429,7 @@ The tiny KV footprint (only 10 attention layers vs 40 for a dense model) is also
 
 ---
 
-## 🗜️ Quantization Notes
+## Quantization Notes
 
 ### 35B-A3B MoE: Standard Quants Win
 
@@ -459,7 +459,7 @@ For dense models, UD quants perform normally. The MXFP4 issue is specific to MoE
 
 ---
 
-## 🖥️ Hardware Notes
+## Hardware Notes
 
 ### Compatible 16GB NVIDIA GPUs
 
@@ -562,7 +562,7 @@ On Blackwell's GDDR7 (960 GB/s), bandwidth is abundant:
 
 ### Full Guide
 
-📄 **Complete build instructions, troubleshooting, and performance analysis:**
+**Complete build instructions, troubleshooting, and performance analysis:**
 
 👉 **[`docs/RTX5080-NATIVE-BUILD.md`](docs/RTX5080-NATIVE-BUILD.md)**
 
@@ -576,7 +576,7 @@ Includes:
 
 ---
 
-## 📈 Benchmarking
+## Benchmarking
 
 ```bash
 # Quick benchmark — runs 5 requests, reports avg/peak/p95
@@ -592,31 +592,31 @@ python tests/compare_models.py
 python tests/vision_test.py
 ```
 
-📄 **Full documented results:** [`results/BENCHMARK_RESULTS.md`](results/BENCHMARK_RESULTS.md)
+**Full documented results:** [`results/BENCHMARK_RESULTS.md`](results/BENCHMARK_RESULTS.md)
 
 ---
 
-## 📁 Repo Structure
+## Repo Structure
 
 ```
 Qwen-3.5-16G-Vram-Local/
 │
-├── 📄 README.md                  ← You are here
-├── 📄 [DISCOVERY.md](DISCOVERY.md)               ← Full 155,904 cliff write-up
-├── 📄 [CHANGELOG.md](CHANGELOG.md)               ← Version history
+├── README.md                  ← You are here
+├── [DISCOVERY.md](DISCOVERY.md)               ← Full 155,904 cliff write-up
+├── [CHANGELOG.md](CHANGELOG.md)               ← Version history
 │
 ├── ⚙️  config/
 │   ├── [servers.yaml](config/servers.yaml)              ← All server configs — edit model paths here
 │   └── [config_loader.py](config/config_loader.py)     ← Python config loader
 │
-├── 🧪 tests/
+├── tests/
 │   ├── [simple_benchmark.py](tests/simple_benchmark.py)      ← Main benchmark (avg/peak/p95)
 │   ├── [health_check.py](tests/health_check.py)              ← Server liveness check
 │   ├── [compare_models.py](tests/compare_models.py)          ← Side-by-side comparison
 │   ├── [benchmark.py](tests/benchmark.py)                    ← Extended benchmark suite
 │   └── [vision_test.py](tests/vision_test.py)                ← Multimodal / image test
 │
-├── 📊 results/
+├── results/
 │   └── [BENCHMARK_RESULTS.md](results/BENCHMARK_RESULTS.md)     ← Full documented benchmark run
 │
 ├── 📚 docs/
@@ -629,14 +629,14 @@ Qwen-3.5-16G-Vram-Local/
 ├── 🚀 [start_servers_speed.bat](start_servers_speed.bat)    ← Windows: launch coding/vision/quality
 ├── 🔧 [start_servers_standard.bat](start_servers_standard.bat) ← Windows: standard profiles
 ├── 🛑 [stop_servers.bat](stop_servers.bat)           ← Windows: kill all servers
-├── 🐍 [server_manager.py](server_manager.py)          ← Python server lifecycle manager
-├── 🐍 [qwen_api.py](qwen_api.py)                ← Minimal API client helper
-└── 📥 [download_model.ps1](download_model.ps1)         ← Model download script
+├── [server_manager.py](server_manager.py)          ← Python server lifecycle manager
+├── [qwen_api.py](qwen_api.py)                ← Minimal API client helper
+└── [download_model.ps1](download_model.ps1)         ← Model download script
 ```
 
 ---
 
-## 🤝 Contributing / Reproducing
+## Contributing / Reproducing
 
 **Help expand GPU compatibility data!** Test on your 16GB card and report:
 
@@ -654,30 +654,30 @@ This helps confirm whether the 155,904 cliff is universal or shifts with GPU/arc
 
 Other useful contributions:
 
-- 🐧 **Linux results** — same hardware, different OS
-- 🔨 **Native sm_89/sm_120 builds** — source compile benchmarks → [Build guide](docs/RTX5080-NATIVE-BUILD.md)
-- 🧪 **Other MoE models** — does the cliff exist on other hybrid-recurrent architectures?
+- **Linux results** — same hardware, different OS
+- **Native sm_89/sm_120 builds** — source compile benchmarks → [Build guide](docs/RTX5080-NATIVE-BUILD.md)
+- **Other MoE models** — does the cliff exist on other hybrid-recurrent architectures?
 
 ---
 
-## 🔗 Related Resources
+## Related Resources
 
 ### Models & Downloads
 
 | Resource                             | Link                                                                                                |
 | ------------------------------------ | --------------------------------------------------------------------------------------------------- |
-| 🤗 **Qwen3.5-35B-A3B (Recommended)** | [unsloth/Qwen3.5-35B-A3B-GGUF](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF)                 |
-| 🤗 Qwen2.5-VL-9B (Vision)            | [unsloth/Qwen2.5-VL-9B-Instruct-GGUF](https://huggingface.co/unsloth/Qwen2.5-VL-9B-Instruct-GGUF)   |
-| 🤗 Qwen2.5-VL-27B (Quality)          | [unsloth/Qwen2.5-VL-27B-Instruct-GGUF](https://huggingface.co/unsloth/Qwen2.5-VL-27B-Instruct-GGUF) |
-| 🤗 Alternative quants                | [bartowski/Qwen3.5-35B-A3B-GGUF](https://huggingface.co/bartowski/Qwen3.5-35B-A3B-GGUF)             |
+| **Qwen3.5-35B-A3B (Recommended)** | [unsloth/Qwen3.5-35B-A3B-GGUF](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF)                 |
+| Qwen2.5-VL-9B (Vision)            | [unsloth/Qwen2.5-VL-9B-Instruct-GGUF](https://huggingface.co/unsloth/Qwen2.5-VL-9B-Instruct-GGUF)   |
+| Qwen2.5-VL-27B (Quality)          | [unsloth/Qwen2.5-VL-27B-Instruct-GGUF](https://huggingface.co/unsloth/Qwen2.5-VL-27B-Instruct-GGUF) |
+| Alternative quants                | [bartowski/Qwen3.5-35B-A3B-GGUF](https://huggingface.co/bartowski/Qwen3.5-35B-A3B-GGUF)             |
 
 ### Tools & Frameworks
 
 | Resource              | Link                                                                        |
 | --------------------- | --------------------------------------------------------------------------- |
-| 🛠️ **llama.cpp**      | [github.com/ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp)      |
-| 🛠️ llama.cpp releases | [Releases page](https://github.com/ggml-org/llama.cpp/releases)             |
-| 🐍 HuggingFace CLI    | [CLI documentation](https://huggingface.co/docs/huggingface_hub/guides/cli) |
+| **llama.cpp**      | [github.com/ggml-org/llama.cpp](https://github.com/ggml-org/llama.cpp)      |
+| llama.cpp releases | [Releases page](https://github.com/ggml-org/llama.cpp/releases)             |
+| HuggingFace CLI    | [CLI documentation](https://huggingface.co/docs/huggingface_hub/guides/cli) |
 | 🔧 CUDA Toolkit       | [NVIDIA downloads](https://developer.nvidia.com/cuda-downloads)             |
 
 ### Community & Discussion
@@ -692,13 +692,13 @@ Other useful contributions:
 
 | Resource                 | Link                                                         |
 | ------------------------ | ------------------------------------------------------------ |
-| 📄 Gated DeltaNet        | [arxiv.org/abs/2501.06026](https://arxiv.org/abs/2501.06026) |
-| 📄 Qwen Technical Report | [arxiv.org/abs/2309.16609](https://arxiv.org/abs/2309.16609) |
-| 📄 Flash Attention       | [arxiv.org/abs/2205.14135](https://arxiv.org/abs/2205.14135) |
+| Gated DeltaNet        | [arxiv.org/abs/2501.06026](https://arxiv.org/abs/2501.06026) |
+| Qwen Technical Report | [arxiv.org/abs/2309.16609](https://arxiv.org/abs/2309.16609) |
+| Flash Attention       | [arxiv.org/abs/2205.14135](https://arxiv.org/abs/2205.14135) |
 
 ---
 
-## 📜 License
+## License
 
 **Scripts and configs:** [MIT](LICENSE) — use freely, no attribution required.
 
@@ -706,25 +706,25 @@ Other useful contributions:
 
 ---
 
-## 👤 About the Author
+## About the Author
 
 This project was created through extensive hands-on benchmarking and experimentation on consumer hardware.
 
 **William Finger** ([@willbnu](https://github.com/willbnu))
 
 - 🔧 Hardware enthusiast — RTX 5080, Ryzen 7 9800X3D, 96GB DDR5
-- 🧪 Passionate about local LLM optimization and real-world performance testing
-- 📊 Discovered the 155,904 token context cliff through systematic benchmarking
+- Passionate about local LLM optimization and real-world performance testing
+- Discovered the 155,904 token context cliff through systematic benchmarking
 - 🚀 Building tools and sharing knowledge to help others run LLMs locally
 
 > _"If it can't run locally at 100+ t/s, I'm not interested."_
 
-**🌐 Portfolio:** [williamfinger.dev](https://williamfinger.dev)
+**Portfolio:** [willfinger.com](https://willfinger.com)
 
 **Connect:**
 
-- 💼 [GitHub](https://github.com/willbnu)
-- 📧 Open an issue for questions or collaborations
+- [GitHub](https://github.com/willbnu)
+- Open an issue for questions or collaborations
 
 ---
 
@@ -736,7 +736,7 @@ This project was created through extensive hands-on benchmarking and experimenta
 
 **🔄 Test on your GPU · Report your cliff · Help the community**
 
-[📤 Open an Issue](https://github.com/willbnu/Qwen-3.5-16G-Vram-Local/issues/new) · [🔀 Submit a PR](https://github.com/willbnu/Qwen-3.5-16G-Vram-Local/pulls) · [💬 Discuss](https://github.com/willbnu/Qwen-3.5-16G-Vram-Local/discussions)
+[Open an Issue](https://github.com/willbnu/Qwen-3.5-16G-Vram-Local/issues/new) · [Submit a PR](https://github.com/willbnu/Qwen-3.5-16G-Vram-Local/pulls) · [Discuss](https://github.com/willbnu/Qwen-3.5-16G-Vram-Local/discussions)
 
 ---
 

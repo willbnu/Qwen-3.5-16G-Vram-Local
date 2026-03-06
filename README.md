@@ -58,15 +58,15 @@
 | I want to...                        | Go to                                                      |
 | ----------------------------------- | ---------------------------------------------------------- |
 | **Get running fast**             | [Quick Start](#-quick-start)                               |
-| **Use vision/multimodal**        | [Vision & Multimodal](#️-vision--multimodal--fully-working) |
+| **Use vision/multimodal**        | [Vision & Multimodal](#vision--multimodal--fully-working) |
 | **See benchmark numbers**        | [Key Results](#-key-results)                               |
 | **Understand the context cliff** | [The Discovery](#️-the-discovery-155904-token-cliff)        |
-| ⚙️ **Copy server configs**          | [Server Configs](#-all-three-server-configs)               |
-| **Learn why MoE is fast**        | [MoE Explained](#-why-the-35b-moe-is-faster-than-it-looks) |
+| ⚙️ **Copy server configs**          | [Server Configs](#all-three-server-configs)               |
+| **Learn why MoE is fast**        | [MoE Explained](#why-the-35b-moe-is-faster-than-it-looks) |
 | **Pick the right quant**         | [Quantization Notes](#-quantization-notes)                 |
 | **Check GPU compatibility**      | [Hardware Notes](#-hardware-notes)                         |
 | **Build for RTX 5080/5090**      | [Native Build Guide](docs/RTX5080-NATIVE-BUILD.md)         |
-| **Run benchmarks**               | [Benchmarking](#-benchmarking)                             |
+| **Run benchmarks**               | [Benchmarking](#benchmarking)                             |
 
 ---
 
@@ -103,9 +103,9 @@ A production-tested [llama.cpp](https://github.com/ggml-org/llama.cpp) setup for
 
 | Profile            | Model                                                                     | Port |  ⚡ Speed   | 🧠 Context | 💾 VRAM | Config                                   |
 | ------------------ | ------------------------------------------------------------------------- | :--: | :---------: | :--------: | :-----: | ---------------------------------------- |
-| **Coding**      | [35B-A3B Q3_K_S](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF)     | 8002 | **125 t/s** |  **152K**  | 15.4 GB | [→](#️-coding--35b-a3b-q3_k_s-port-8002)  |
-| **Vision/Chat** | [9B Q4_K_XL](https://huggingface.co/unsloth/Qwen2.5-VL-9B-Instruct-GGUF)  | 8003 | **97 t/s**  |  **256K**  | 10.6 GB | [→](#️-fast-vision--9b-q4_k_xl-port-8003) |
-| **Quality**     | [27B Q3_K_S](https://huggingface.co/unsloth/Qwen2.5-VL-27B-Instruct-GGUF) | 8004 | **46 t/s**  |    96K     | 14.5 GB | [→](#️-quality--27b-q3_k_s-port-8004)     |
+| **Coding**      | [35B-A3B Q3_K_S](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF)     | 8002 | **125 t/s** |  **152K**  | 15.4 GB | [→](#coding--35b-a3b-q3_k_s-port-8002)  |
+| **Vision/Chat** | [9B Q4_K_XL](https://huggingface.co/unsloth/Qwen2.5-VL-9B-Instruct-GGUF)  | 8003 | **97 t/s**  |  **256K**  | 10.6 GB | [→](#fast-vision--9b-q4_k_xl-port-8003) |
+| **Quality**     | [27B Q3_K_S](https://huggingface.co/unsloth/Qwen2.5-VL-27B-Instruct-GGUF) | 8004 | **46 t/s**  |    96K     | 14.5 GB | [→](#quality--27b-q3_k_s-port-8004)     |
 
 > **⚠️ One server at a time.** The 35B alone uses 15.4 GB — no two models fit in 16 GB simultaneously.
 

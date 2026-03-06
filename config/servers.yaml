@@ -93,6 +93,7 @@ servers:
       top_p: 0.8
       top_k: 20
       presence_penalty: 1.5
+      enable_thinking: false
       reasoning_budget: 0
     vram_estimate_gb: 14.5 # model=11.19 + KV=1.73 + mmproj=0.88 + compute=0.49
     use_case: "quality"

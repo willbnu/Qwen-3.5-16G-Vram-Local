@@ -104,8 +104,8 @@ A production-tested [llama.cpp](https://github.com/ggml-org/llama.cpp) setup for
 | Profile            | Model                                                                     | Port |  ⚡ Speed   | 🧠 Context | 💾 VRAM | Config                                   |
 | ------------------ | ------------------------------------------------------------------------- | :--: | :---------: | :--------: | :-----: | ---------------------------------------- |
 | **Coding**      | [35B-A3B Q3_K_S](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF)     | 8002 | **125 t/s** |  **152K**  | 15.4 GB | [→](#coding--35b-a3b-q3_k_s-port-8002)  |
-| **Vision/Chat** | [9B Q4_K_XL](https://huggingface.co/unsloth/Qwen2.5-VL-9B-Instruct-GGUF)  | 8003 | **97 t/s**  |  **256K**  | 10.6 GB | [→](#fast-vision--9b-q4_k_xl-port-8003) |
-| **Quality**     | [27B Q3_K_S](https://huggingface.co/unsloth/Qwen2.5-VL-27B-Instruct-GGUF) | 8004 | **46 t/s**  |    96K     | 14.5 GB | [→](#quality--27b-q3_k_s-port-8004)     |
+| **Vision/Chat** | [9B UD-Q4_K_XL](https://huggingface.co/unsloth/Qwen3.5-9B-GGUF)  | 8003 | **97 t/s**  |  **256K**  | 10.6 GB | [→](#fast-vision--9b-ud-q4_k_xl-port-8003) |
+| **Quality**     | [27B Q3_K_S](https://huggingface.co/unsloth/Qwen3.5-27B-GGUF) | 8004 | **46 t/s**  |    96K     | 14.5 GB | [→](#quality--27b-q3_k_s-port-8004)     |
 
 > **⚠️ One server at a time.** The 35B alone uses 15.4 GB — no two models fit in 16 GB simultaneously.
 
@@ -188,21 +188,21 @@ huggingface-cli download unsloth/Qwen3.5-35B-A3B-GGUF \
   --local-dir ./models/unsloth-gguf/
 
 # 9B Vision server (~5 GB) — OPTIONAL
-huggingface-cli download unsloth/Qwen2.5-VL-9B-Instruct-GGUF \
-  Qwen2.5-VL-9B-Instruct-Q4_K_XL.gguf \
-  mmproj-Qwen2.5-VL-9B-Instruct-F16.gguf \
+huggingface-cli download unsloth/Qwen3.5-9B-GGUF \
+  Qwen3.5-9B-UD-Q4_K_XL.gguf \
+  mmproj-F16.gguf \
   --local-dir ./models/unsloth-gguf/
 
 # 27B Quality server (~11 GB) — OPTIONAL
-huggingface-cli download unsloth/Qwen2.5-VL-27B-Instruct-GGUF \
-  Qwen2.5-VL-27B-Instruct-Q3_K_S.gguf \
-  mmproj-Qwen2.5-VL-27B-Instruct-F16.gguf \
+huggingface-cli download unsloth/Qwen3.5-27B-GGUF \
+  Qwen3.5-27B-Q3_K_S.gguf \
+  mmproj-27B-F16.gguf \
   --local-dir ./models/unsloth-gguf/
 ```
 
 Or use the included helper: [`download_model.ps1`](download_model.ps1)
 
-> **Direct downloads:** [35B-A3B](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF) · [9B-VL](https://huggingface.co/unsloth/Qwen2.5-VL-9B-Instruct-GGUF) · [27B-VL](https://huggingface.co/unsloth/Qwen2.5-VL-27B-Instruct-GGUF)
+> **Direct downloads:** [35B-A3B](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF) · [9B](https://huggingface.co/unsloth/Qwen3.5-9B-GGUF) · [27B](https://huggingface.co/unsloth/Qwen3.5-27B-GGUF)
 
 **3. Python** (benchmark scripts only) — 3.11+ with:
 
@@ -370,17 +370,17 @@ This buffer grows with context size. Between 155,904 and 156,160 tokens, it cros
 
 ---
 
-### Fast Vision — 9B Q4_K_XL (Port 8003)
+### Fast Vision — 9B UD-Q4_K_XL (Port 8003)
 
 ```bash
--m Qwen2.5-VL-9B-Instruct-Q4_K_XL.gguf
---mmproj mmproj-Qwen2.5-VL-9B-Instruct-F16.gguf
+-m Qwen3.5-9B-UD-Q4_K_XL.gguf
+--mmproj mmproj-F16.gguf
 -c 262144 -ngl 99 --flash-attn on
 -ctk q8_0 -ctv q8_0
 --chat-template-kwargs '{"enable_thinking":false}'
 ```
 
-Full 256K context ([model native max](https://huggingface.co/Qwen/Qwen2.5-VL-9B-Instruct)). Uses **[q8_0 KV](docs/KV_CACHE_ANALYSIS.md)** — not iq4_nl — because the 9B is a dense model with 33 attention layers. On high-bandwidth GPUs (GDDR6X/GDDR7), raw read speed matters more than dequant cost, so the larger but simpler q8_0 wins.
+Full 256K context ([model native max](https://huggingface.co/Qwen/Qwen3.5-9B)). Uses **[q8_0 KV](docs/KV_CACHE_ANALYSIS.md)** — not iq4_nl — because the 9B is a dense model with 33 attention layers. On high-bandwidth GPUs (GDDR6X/GDDR7), raw read speed matters more than dequant cost, so the larger but simpler q8_0 wins.
 
 ---
 
@@ -667,8 +667,8 @@ Other useful contributions:
 | Resource                             | Link                                                                                                |
 | ------------------------------------ | --------------------------------------------------------------------------------------------------- |
 | **Qwen3.5-35B-A3B (Recommended)** | [unsloth/Qwen3.5-35B-A3B-GGUF](https://huggingface.co/unsloth/Qwen3.5-35B-A3B-GGUF)                 |
-| Qwen2.5-VL-9B (Vision)            | [unsloth/Qwen2.5-VL-9B-Instruct-GGUF](https://huggingface.co/unsloth/Qwen2.5-VL-9B-Instruct-GGUF)   |
-| Qwen2.5-VL-27B (Quality)          | [unsloth/Qwen2.5-VL-27B-Instruct-GGUF](https://huggingface.co/unsloth/Qwen2.5-VL-27B-Instruct-GGUF) |
+| Qwen3.5-9B (Vision)              | [unsloth/Qwen3.5-9B-GGUF](https://huggingface.co/unsloth/Qwen3.5-9B-GGUF)                           |
+| Qwen3.5-27B (Quality)            | [unsloth/Qwen3.5-27B-GGUF](https://huggingface.co/unsloth/Qwen3.5-27B-GGUF)                         |
 | Alternative quants                | [bartowski/Qwen3.5-35B-A3B-GGUF](https://huggingface.co/bartowski/Qwen3.5-35B-A3B-GGUF)             |
 
 ### Tools & Frameworks

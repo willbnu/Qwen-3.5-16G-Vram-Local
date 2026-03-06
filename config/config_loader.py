@@ -36,6 +36,10 @@ class ServerConfig:
     use_case: str
     description: str
     enabled: bool = True
+    mmproj_offload: bool = False  # GPU offload for vision projector
+    batch_size: int = 1024  # -b parameter
+    ubatch_size: int = 256  # -ub parameter
+    fit_target: Optional[int] = None  # --fit-target for dynamic context fitting
 
     @property
     def model_path(self) -> Path:
@@ -79,6 +83,8 @@ class ServerConfig:
             self.cache_type_k,
             "-ctv",
             self.cache_type_v,
+            "-b", str(self.batch_size),
+            "-ub", str(self.ubatch_size),
             "--temp",
             str(self.temp),
             "--top-p",
@@ -91,6 +97,11 @@ class ServerConfig:
 
         if self.mmproj:
             cmd.extend(["--mmproj", str(self.mmproj_path)])
+            if self.mmproj_offload:
+                cmd.append("--mmproj-offload")
+
+        if self.fit_target:
+            cmd.extend(["--fit", "on", "--fit-target", str(self.fit_target)])
 
         if not self.enable_thinking:
             cmd.extend(["--chat-template-kwargs", '{"enable_thinking":false}'])
@@ -155,6 +166,10 @@ class Config:
                 use_case=data["use_case"],
                 description=data["description"],
                 enabled=data.get("enabled", True),
+                mmproj_offload=cfg.get("mmproj_offload", False),
+                batch_size=cfg.get("batch_size", 1024),
+                ubatch_size=cfg.get("ubatch_size", 256),
+                fit_target=cfg.get("fit_target"),
             )
 
     def _load_profiles(self):

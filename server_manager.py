@@ -40,6 +40,8 @@ def build_server_command(server: ServerConfig) -> list:
         server.cache_type_k,
         "-ctv",
         server.cache_type_v,
+        "-b", str(server.batch_size),
+        "-ub", str(server.ubatch_size),
         "--temp",
         str(server.temp),
         "--top-p",
@@ -52,6 +54,11 @@ def build_server_command(server: ServerConfig) -> list:
 
     if server.mmproj_path:
         cmd.extend(["--mmproj", str(server.mmproj_path)])
+        if server.mmproj_offload:
+            cmd.append("--mmproj-offload")
+
+    if server.fit_target:
+        cmd.extend(["--fit", "on", "--fit-target", str(server.fit_target)])
 
     if not server.enable_thinking:
         cmd.extend(["--chat-template-kwargs", '{"enable_thinking":false}'])

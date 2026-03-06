@@ -41,7 +41,7 @@ const DocsPanel: ComponentType<ComponentRenderProps> = ({ element }) => {
 };
 
 const StatCard: ComponentType<ComponentRenderProps> = ({ element }) => {
-  const { label, value, unit, description, trend, trendValue } = element.props as any;
+  const { label, value, unit } = element.props as any;
   return (
     <div className="rounded-lg border bg-card p-4 shadow-sm">
       <div className="text-sm text-muted-foreground">{label}</div>
@@ -54,7 +54,7 @@ const StatCard: ComponentType<ComponentRenderProps> = ({ element }) => {
 };
 
 const BenchmarkPanel: ComponentType<ComponentRenderProps> = ({ element }) => {
-  const { results, runAt } = element.props as any;
+  const { results } = element.props as any;
   return (
     <div className="rounded-lg border bg-card p-4 shadow-sm">
       <h3 className="mb-3 text-lg font-semibold">Benchmark Results</h3>

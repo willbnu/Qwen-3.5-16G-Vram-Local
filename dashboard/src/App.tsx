@@ -309,7 +309,6 @@ function App() {
     if (models.length > 0) {
       const model = models[0];
       const modelId = model.id.replace('.gguf', '');
-      const parts = modelId.split('-');
       
       const quantMatch = modelId.match(/Q\d+_[A-Z_]+/i);
       const quantization = quantMatch ? quantMatch[0] : 'unknown';

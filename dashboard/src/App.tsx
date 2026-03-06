@@ -11,13 +11,13 @@ import { useMemo, useEffect, useState, useCallback } from 'react';
 import { JSONUIProvider, Renderer } from '@json-render/react';
 import { registry } from './registry';
 import { dashboardSpec } from './specs/dashboardSpec';
-import { checkHealth, getMetricsFromTest, getModels, parseModelName } from './services/llmApi';
+import { checkHealth, getMetricsFromTest, getModels } from './services/llmApi';
 import type { DocCategory } from './types';
 
 /**
- * Sample documentation categories for initial data
+ * Documentation categories with comprehensive content
  */
-const sampleDocCategories: DocCategory[] = [
+const docCategories: DocCategory[] = [
   {
     id: 'getting-started',
     name: 'Getting Started',
@@ -27,15 +27,124 @@ const sampleDocCategories: DocCategory[] = [
         id: 'installation',
         title: 'Installation',
         category: 'getting-started',
-        content: '## Installation\n\nFollow these steps to set up the LLM Chat Dashboard:\n\n1. Clone the repository\n2. Install dependencies\n3. Configure your API keys\n4. Start the development server',
+        content: `## Installation
+
+Get the dashboard running in minutes.
+
+**Steps:**
+1. Clone: \`git clone <repo>\`
+2. Install: \`npm install\`
+3. Start server: \`start_servers_speed.bat coding\`
+4. Run dashboard: \`npm run dev\`
+
+**Requirements:**
+- Node.js 18+
+- 16GB GPU VRAM (for 35B model)
+- llama.cpp SM120 build`,
         updatedAt: new Date().toISOString(),
       },
       {
         id: 'quick-start',
         title: 'Quick Start Guide',
         category: 'getting-started',
-        content: '## Quick Start\n\nGet started with the dashboard in minutes:\n\n- Configure your model settings\n- Set up cost tracking\n- Monitor performance metrics',
+        content: `## Quick Start
+
+1. Start the LLM server first
+2. Open the dashboard at http://localhost:5173
+3. Check the server status indicator (green = online)
+4. Click "Refresh" to update metrics
+
+**Using Kilo Code CLI:**
+\`\`\`bash
+kilo run "write a hello world function"
+\`\`\``,
         updatedAt: new Date(Date.now() - 86400000).toISOString(),
+      },
+    ],
+  },
+  {
+    id: 'models-performance',
+    name: 'Models & Performance',
+    description: 'Local LLM specs and benchmarks',
+    entries: [
+      {
+        id: 'qwen-35b',
+        title: 'Qwen3.5-35B-A3B (MoE)',
+        category: 'models-performance',
+        content: `## Qwen3.5-35B-A3B
+
+Mixture-of-Experts model with A3B active parameters.
+
+| Spec | Value |
+|-----|-------|
+| Parameters | 35B (8.95B active) |
+| Context | 32K-120K tokens |
+| Speed | 120+ t/s generation |
+| VRAM | ~14GB (32K context) |
+| Use Case | Coding, complex reasoning |
+
+**Critical flags:**
+- \`--parallel 1\` - Required for 10x speed boost
+- \`--reasoning-budget 0\` - Disables thinking mode`,
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'qwen-9b',
+        title: 'Qwen3.5-9B (Fast)',
+        category: 'models-performance',
+        content: `## Qwen3.5-9B
+
+Dense model optimized for speed.
+
+| Spec | Value |
+|-----|-------|
+| Parameters | 9B |
+| Context | 64K tokens |
+| Speed | 95-105 t/s |
+| VRAM | ~7GB (full GPU fit) |
+| Use Case | Chat, Kilo Code CLI |
+| Vision | Yes (multimodal) |
+
+**Best for interactive applications.**`,
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'qwen-27b',
+        title: 'Qwen3.5-27B (Quality)',
+        category: 'models-performance',
+        content: `## Qwen3.5-27B
+
+Dense model for high-quality output.
+
+| Spec | Value |
+|-----|-------|
+| Parameters | 27B |
+| Context | 64K tokens |
+| Speed | 45-55 t/s |
+| VRAM | ~12GB (partial offload) |
+| Use Case | Complex analysis |
+
+**Note:** Requires partial CPU offloading at 64K.**`,
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'optimization-tips',
+        title: 'Performance Tips',
+        category: 'models-performance',
+        content: `## Speed Optimization
+
+**Required Flags:**
+- \`--parallel 1\` - **10x speed boost** (critical!)
+- \`--reasoning-budget 0\` - Disables thinking mode
+- \`--flash-attn on\` - Faster attention
+
+**Context vs Speed:**
+- 32K: Full GPU fit, 120+ t/s
+- 64K: Partial offload, 2-10 t/s
+- 120K+: Severe offload, <1 t/s
+
+**Hardware:** RTX 5080 16GB VRAM`,
+        updatedAt: new Date().toISOString(),
       },
     ],
   },
@@ -46,16 +155,43 @@ const sampleDocCategories: DocCategory[] = [
     entries: [
       {
         id: 'chat-endpoint',
-        title: 'Chat Endpoint',
+        title: 'Chat Completions',
         category: 'api-reference',
-        content: '## Chat Endpoint\n\nPOST /api/chat\n\nSend a chat message to the LLM and receive a response.',
-        url: 'https://example.com/docs/chat',
+        content: `## Chat Completions API
+
+OpenAI-compatible chat endpoint.
+
+**Endpoint:** \`POST /v1/chat/completions\`
+
+\`\`\`bash
+curl http://localhost:8002/v1/chat/completions \\
+  -H "Content-Type: application/json" \\
+  -d '{
+    "model": "qwen",
+    "messages": [{"role": "user", "content": "Hello!"}],
+    "max_tokens": 100
+  }'
+\`\`\`
+
+**Returns:** Usage stats, timing info, tokens/sec`,
+        updatedAt: new Date().toISOString(),
       },
       {
-        id: 'metrics-endpoint',
-        title: 'Metrics Endpoint',
+        id: 'models-endpoint',
+        title: 'Models API',
         category: 'api-reference',
-        content: '## Metrics Endpoint\n\nGET /api/metrics\n\nRetrieve current performance metrics.',
+        content: `## Models API
+
+Get loaded model info.
+
+**Endpoint:** \`GET /v1/models\`
+
+**Returns:**
+- Model ID and filename
+- Context window size
+- Parameter count
+- Quantization level`,
+        updatedAt: new Date().toISOString(),
       },
     ],
   },
@@ -66,9 +202,45 @@ const sampleDocCategories: DocCategory[] = [
     entries: [
       {
         id: 'connection-issues',
-        title: 'Connection Issues',
+        title: 'Server Offline',
         category: 'troubleshooting',
-        content: '## Connection Issues\n\nIf you experience connection problems:\n\n1. Check your network connection\n2. Verify API credentials\n3. Check server logs',
+        content: `## Server Offline
+
+If dashboard shows "Server Offline":
+
+1. Check if running: \`tasklist | find llama\`
+2. Check port: \`netstat -an | find 8002\`
+3. Start server: \`start_servers_speed.bat coding\``,
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'slow-speed',
+        title: 'Slow Generation',
+        category: 'troubleshooting',
+        content: `## Slow Token Generation
+
+If speed is below 10 t/s:
+
+**Causes:**
+- Context too large
+- Missing \`--parallel 1\`
+- CPU offloading
+
+**Fix:** Add \`--parallel 1\` flag!`,
+        updatedAt: new Date().toISOString(),
+      },
+      {
+        id: 'thinking-mode',
+        title: 'Thinking Mode',
+        category: 'troubleshooting',
+        content: `## Thinking Mode Issues
+
+Qwen3.5 may output to \`reasoning_content\`.
+
+**Problem:** Empty \`content\` field
+
+**Fix:** Add \`--reasoning-budget 0\``,
+        updatedAt: new Date().toISOString(),
       },
     ],
   },
@@ -103,10 +275,12 @@ const defaultState = {
     contextWindow: 0,
     maxOutput: 0,
     speed: 'offline',
-    useCase: 'Start the llama.cpp server to see real metrics',
+    useCase: 'Start the llama.cpp server',
     version: 'N/A',
+    params: 0,
+    quantization: 'N/A',
   },
-  docs: sampleDocCategories,
+  docs: docCategories,
   serverStatus: 'offline' as 'online' | 'offline' | 'checking',
 };
 
@@ -117,9 +291,8 @@ function App() {
   const [serverStatus, setServerStatus] = useState<'online' | 'offline' | 'checking'>('checking');
   const [metrics, setMetrics] = useState(defaultState.metrics);
   const [modelInfo, setModelInfo] = useState(defaultState.model);
-  const [refreshKey, setRefreshKey] = useState(0); // Used to trigger refresh without incrementing counter
+  const [refreshKey, setRefreshKey] = useState(0);
 
-  // Fetch real metrics from the server
   const fetchMetrics = useCallback(async () => {
     setServerStatus('checking');
     
@@ -132,23 +305,35 @@ function App() {
     
     setServerStatus('online');
     
-    // Get model info
     const models = await getModels();
     if (models.length > 0) {
-      const parsed = parseModelName(models[0].id);
+      const model = models[0];
+      const modelId = model.id.replace('.gguf', '');
+      const parts = modelId.split('-');
+      
+      const quantMatch = modelId.match(/Q\d+_[A-Z_]+/i);
+      const quantization = quantMatch ? quantMatch[0] : 'unknown';
+      
+      const nameMatch = modelId.match(/^([A-Za-z0-9.]+-\d+B)/);
+      const name = nameMatch ? nameMatch[1] : modelId;
+      
+      const sizeGB = (model.meta.size / 1e9).toFixed(1);
+      const paramsB = (model.meta.n_params / 1e9).toFixed(1);
+      
       setModelInfo({
-        name: parsed.name,
-        provider: parsed.provider,
+        name: name,
+        provider: 'Local (llama.cpp)',
         port: 8002,
-        contextWindow: models[0].meta.n_ctx_train,
+        contextWindow: model.meta.n_ctx_train,
         maxOutput: 8192,
         speed: 'fast',
-        useCase: 'Local inference via llama.cpp',
-        version: parsed.quant,
+        useCase: 'Local inference',
+        version: `${paramsB}B params | ${sizeGB}GB`,
+        params: model.meta.n_params,
+        quantization: quantization,
       });
     }
     
-    // Get real metrics via test request
     const response = await getMetricsFromTest(50);
     if (response && response.timings) {
       setMetrics({
@@ -159,19 +344,17 @@ function App() {
         completionTokens: response.usage.completion_tokens,
         time: response.timings.predicted_ms / 1000,
         averageLatency: Math.round(response.timings.prompt_ms),
-        requestsCount: 0, // Local inference - no request counting needed
+        requestsCount: 0,
       });
     }
   }, []);
 
-  // Check server on mount and periodically
   useEffect(() => {
     fetchMetrics();
-    const interval = setInterval(fetchMetrics, 30000); // Refresh every 30s
+    const interval = setInterval(fetchMetrics, 30000);
     return () => clearInterval(interval);
   }, [fetchMetrics]);
 
-  // Build initial state for json-render
   const initialState = useMemo(() => ({
     metrics,
     costs: {
@@ -183,13 +366,12 @@ function App() {
       currency: 'USD',
     },
     model: modelInfo,
-    docs: sampleDocCategories,
+    docs: docCategories,
     serverStatus,
   }), [metrics, modelInfo, serverStatus]);
 
   return (
     <div className="relative">
-      {/* Server status indicator */}
       <div className="fixed top-2 right-2 z-50 flex items-center gap-2 rounded-full px-3 py-1 text-xs font-medium shadow-lg">
         <span className={`h-2 w-2 rounded-full ${
           serverStatus === 'online' ? 'bg-green-500 animate-pulse' :

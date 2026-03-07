@@ -14,34 +14,34 @@ It stays strict about evidence, but it should still feel useful at a glance: wha
 | Benchmark numbers | Backed by checked-in JSON artifacts |
 | Cross-GPU claims | Treated as estimates until reproduced elsewhere |
 
-## Why This Repo Exists
+## Why This Repo Exists 🚀
 
 - The 35B preset is the main attraction: a practical local coding model that still feels fast on a single 16GB GPU.
 - The repo keeps the launchers, config, helper scripts, and benchmark artifacts in one place so people can reproduce the setup instead of copy-pasting random command lines.
 - The goal is not to sound maximalist. The goal is to help someone get from zero to a working, measured setup quickly.
 
-## Scope
+## Scope 📌
 
 - Primary test machine: RTX 5080 16GB, Windows 11, `llama.cpp` b8196+.
 - Primary workflow: one server at a time.
 - Primary 35B preset: `Qwen3.5-35B-A3B-Q3_K_S.gguf` with `mmproj` loaded and `--parallel 1`.
 - Default 35B context in this repo: `122880` tokens (120K), chosen for better Windows headroom.
 
-## What Is Verified Here
+## What Is Verified Here ✅
 
 - The 35B `Q3_K_S` preset can keep all layers on GPU on the tested RTX 5080 16GB machine.
 - `--parallel 1` is required for the 35B preset to avoid a major throughput drop on that setup.
 - Text generation stays fast with `mmproj` loaded. The checked-in 35B headline artifacts are text-prompt benchmarks against a server that had the vision projector enabled.
 - The repo includes working image-input tooling through the OpenAI-compatible `image_url` request format.
 
-## What Is Not Fully Verified Here
+## What Is Not Fully Verified Here ⚠️
 
 - Exact speeds on every 16GB NVIDIA card.
 - A universal `155,904`-token cliff on all GPUs and operating systems.
 - Full multimodal throughput parity between text-only and image requests.
 - Direct PDF or video pipelines. In practice those need preprocessing to images first.
 
-## Recommended Presets
+## Recommended Presets 🎯
 
 | Key | Port | Model | Default Context | Estimated VRAM | Use |
 | --- | --- | --- | --- | --- | --- |
@@ -51,7 +51,7 @@ It stays strict about evidence, but it should still feel useful at a glance: wha
 
 The canonical settings live in [config/servers.yaml](config/servers.yaml).
 
-## Reference Measurements
+## Reference Measurements 📊
 
 Checked-in artifacts for the 35B preset:
 
@@ -68,7 +68,7 @@ Checked-in artifacts for the 35B preset:
   - `124.7` avg gen t/s
   - `538.4` avg prompt t/s
 
-The important caveat is that those files measure text generation on a server with vision support enabled. They do not prove that image requests have identical throughput.
+Important caveat: those files measure text generation on a server with vision support enabled. They do not prove that image requests have identical throughput.
 
 Additional notes and historical summaries are in:
 
@@ -78,7 +78,7 @@ Additional notes and historical summaries are in:
 
 If a narrative doc and a checked-in JSON file disagree, prefer the raw JSON artifact.
 
-## Quick Start
+## Quick Start ⚡
 
 ### 1. Install `llama.cpp`
 
@@ -143,7 +143,7 @@ curl http://127.0.0.1:8002/health
 curl http://127.0.0.1:8002/v1/models
 ```
 
-## Benchmarking
+## Benchmarking 🧪
 
 ```bash
 python tests/simple_benchmark.py 8002
@@ -152,9 +152,9 @@ python tests/compare_models.py
 python tests/vision_test.py path/to/image.png
 ```
 
-The `vision_test.py` script sends actual image requests. The `simple_benchmark.py` script does not.
+Note: `vision_test.py` sends actual image requests. `simple_benchmark.py` does not.
 
-## Terminal Chat and API Helper
+## Terminal Chat and API Helper 💬
 
 Terminal chat:
 
@@ -186,13 +186,13 @@ vision = api_9b_vision.vision(
 )
 ```
 
-## Context Guidance
+## Context Guidance 🧠
 
 - The repo default is 120K for the 35B preset because it leaves more Windows headroom than the 155,904-token ceiling case.
 - The `155,904` figure is a measured reference point on the tested RTX 5080 machine, not a promise for every other GPU.
 - The explanation in [DISCOVERY.md](DISCOVERY.md) is an informed hypothesis based on observed buffers and timings, not a proven `llama.cpp` root-cause analysis.
 
-## Project Layout
+## Project Layout 🗂️
 
 ```text
 config/                  Canonical server settings
@@ -206,7 +206,7 @@ start_servers_speed.bat  Windows single-server launcher
 scripts/windows/         Legacy Windows helpers, demos, and extra benchmark scripts
 ```
 
-## Improvement Rules
+## Improvement Rules 🛠️
 
 If you update numbers or claims:
 

@@ -42,6 +42,14 @@ archive/
 # --- Sensitive / OS-specific ---
 .env
 .env.*
+.envrc
+.env.local
+.env.development.local
+.env.test.local
+.env.production.local
+.npmrc
+.pypirc
+.python-version
 *.secret
 Thumbs.db
 .DS_Store

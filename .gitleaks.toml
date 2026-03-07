@@ -1,0 +1,9 @@
+title = "qwen-llm gitleaks config"
+
+[[allowlists]]
+description = "Model filename assertions in API helper tests"
+paths = ["tests/test_qwen_api.py"]
+regexes = [
+  '''Qwen3\.5-35B-A3B-Q3_K_S\.gguf''',
+  '''Qwen3\.5-9B-UD-Q4_K_XL\.gguf''',
+]

@@ -217,7 +217,7 @@ def main():
     try:
         with urllib.request.urlopen(
             "http://localhost:8002/v1/models", timeout=5
-        ) as resp:
+        ) as resp:  # nosemgrep: python.lang.security.audit.dynamic-urllib-use-detected.dynamic-urllib-use-detected, python.lang.security.audit.insecure-transport.urllib.insecure-urlopen.insecure-urlopen
             print("[OK] Local Qwen server running at http://localhost:8002")
     except Exception as e:
         print(f"[FAIL] Server not reachable: {e}")

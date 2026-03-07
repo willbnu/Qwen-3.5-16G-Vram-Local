@@ -34,24 +34,20 @@ def start_server(server: ServerConfig, window_title: str = None) -> subprocess.P
 
     # Windows: use start command to run in new window
     if sys.platform == "win32":
-        # Build the full command string
-        cmd_str = " ".join(f'"{c}"' if " " in c else c for c in cmd)
+        startupinfo = subprocess.STARTUPINFO()
+        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
+        startupinfo.wShowWindow = 6  # SW_MINIMIZE
 
-        # Use start command with /min for minimized window
-        full_cmd = [
-            "cmd",
-            "/c",
-            "start",
-            window_title,
-            "/min",
-            "cmd",
-            "/c",
-            f'{cmd_str} > "{log_file}" 2>&1',
-        ]
-
-        subprocess.run(full_cmd, shell=True)
-        print(f"  Started {server.name} on port {server.port}")
-        return None
+        with open(log_file, "w") as log:
+            proc = subprocess.Popen(
+                cmd,
+                stdout=log,
+                stderr=log,
+                creationflags=subprocess.CREATE_NEW_CONSOLE,
+                startupinfo=startupinfo,
+            )
+        print(f"  Started {server.name} on port {server.port} (PID: {proc.pid})")
+        return proc
     else:
         # Linux/Mac: use subprocess
         with open(log_file, "w") as log:

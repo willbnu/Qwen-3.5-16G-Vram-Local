@@ -38,9 +38,9 @@ Get the dashboard running in minutes.
 4. Run dashboard: \`npm run dev\`
 
 **Requirements:**
-- Node.js 18+
-- 16GB GPU VRAM (for 35B model)
-- llama.cpp SM120 build`,
+- Node.js 20+
+- 16GB NVIDIA GPU VRAM for the 35B preset
+- llama.cpp binary in \`./llama-bin/\` or a native SM120 build`,
         updatedAt: new Date().toISOString(),
       },
       {
@@ -53,11 +53,7 @@ Get the dashboard running in minutes.
 2. Open the dashboard at http://localhost:5173
 3. Check the server status indicator (green = online)
 4. Click "Refresh" to update metrics
-
-**Using Kilo Code CLI:**
-\`\`\`bash
-kilo run "write a hello world function"
-\`\`\``,
+5. Use the model info panel to confirm context size, quant, and loaded model`,
         updatedAt: new Date(Date.now() - 86400000).toISOString(),
       },
     ],
@@ -73,19 +69,19 @@ kilo run "write a hello world function"
         category: 'models-performance',
         content: `## Qwen3.5-35B-A3B
 
-Mixture-of-Experts model with A3B active parameters.
+Primary coding preset for this repo.
 
 | Spec | Value |
 |-----|-------|
-| Parameters | 35B (8.95B active) |
-| Context | 32K-120K tokens |
-| Speed | 120+ t/s generation |
-| VRAM | ~14GB (32K context) |
+| Model | Qwen3.5-35B-A3B-Q3_K_S |
+| Context | 120K default |
+| Speed | ~120-125 t/s on the tested RTX 5080 |
+| VRAM | ~15.3 GB |
 | Use Case | Coding, complex reasoning |
 
 **Critical flags:**
 - \`--parallel 1\` - Required for 10x speed boost
-- \`--reasoning-budget 0\` - Disables thinking mode`,
+- \`--reasoning-budget 0\` - Keeps responses in instruct mode`,
         updatedAt: new Date().toISOString(),
       },
       {
@@ -99,10 +95,10 @@ Dense model optimized for speed.
 | Spec | Value |
 |-----|-------|
 | Parameters | 9B |
-| Context | 64K tokens |
-| Speed | 95-105 t/s |
-| VRAM | ~7GB (full GPU fit) |
-| Use Case | Chat, Kilo Code CLI |
+| Context | 256K |
+| Speed | ~94-110 t/s on checked-in artifacts |
+| VRAM | ~10.6 GB |
+| Use Case | Fast chat and image input |
 | Vision | Yes (multimodal) |
 
 **Best for interactive applications.**`,
@@ -119,12 +115,12 @@ Dense model for high-quality output.
 | Spec | Value |
 |-----|-------|
 | Parameters | 27B |
-| Context | 64K tokens |
-| Speed | 45-55 t/s |
-| VRAM | ~12GB (partial offload) |
+| Context | 96K default |
+| Speed | ~46 t/s target |
+| VRAM | ~14.5 GB |
 | Use Case | Complex analysis |
 
-**Note:** Requires partial CPU offloading at 64K.**`,
+**Note:** Use this when output quality matters more than response speed.`,
         updatedAt: new Date().toISOString(),
       },
       {
@@ -139,9 +135,10 @@ Dense model for high-quality output.
 - \`--flash-attn on\` - Faster attention
 
 **Context vs Speed:**
-- 32K: Full GPU fit, 120+ t/s
-- 64K: Partial offload, 2-10 t/s
-- 120K+: Severe offload, <1 t/s
+- 35B default: 120K for better Windows headroom
+- 35B reference point: 155,904 tokens on the tested RTX 5080
+- 9B preset: 256K with full vision support
+- 27B preset: 96K with slower but higher quality output
 
 **Hardware:** RTX 5080 16GB VRAM`,
         updatedAt: new Date().toISOString(),

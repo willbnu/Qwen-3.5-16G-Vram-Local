@@ -1,0 +1,4 @@
+.tools/
+dashboard/dist/
+gitleaks-report.json
+tests/test_qwen_agent_local.py

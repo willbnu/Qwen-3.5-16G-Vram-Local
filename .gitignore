@@ -109,6 +109,8 @@ opencode.json
 .claude*.json
 .config/
 .local/
+.tools/
+gitleaks-report.json
 
 # --- Auto Claude ---
 .auto-claude/

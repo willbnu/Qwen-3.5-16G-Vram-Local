@@ -222,7 +222,7 @@ def main():
     except Exception as e:
         print(f"[FAIL] Server not reachable: {e}")
         print("\nStart server with:")
-        print("  start_chat_server.bat 35b")
+        print("  scripts\\windows\\start_chat_server.bat 35b")
         return 1
 
     print()

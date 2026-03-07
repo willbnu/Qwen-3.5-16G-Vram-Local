@@ -108,7 +108,7 @@ huggingface-cli download unsloth/Qwen3.5-27B-GGUF \
   --local-dir ./models/unsloth-gguf/
 ```
 
-You can also use [download_model.ps1](download_model.ps1).
+You can also use [scripts/windows/download_model.ps1](scripts/windows/download_model.ps1).
 
 ### 3. Start one server
 
@@ -203,6 +203,7 @@ chat.py                  Terminal client with image support
 qwen_api.py              Minimal Python API helper
 server_manager.py        Cross-platform launcher and process manager
 start_servers_speed.bat  Windows single-server launcher
+scripts/windows/         Legacy Windows helpers, demos, and extra benchmark scripts
 ```
 
 ## Improvement Rules

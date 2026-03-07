@@ -1,6 +1,6 @@
 """
-35B-A3B Vision Test - Updated for new config system.
-Tests 35B Coding+Vision server (port 8005).
+Legacy Vision Test - Updated for new config system.
+Tests 9B Fast Vision server (port 8003).
 """
 
 import base64
@@ -9,18 +9,13 @@ import sys
 import time
 from pathlib import Path
 
-# Add parent to path
-sys.path.insert(0, str(Path(__file__).parent))
+# Add repo root to path
+sys.path.insert(0, str(Path(__file__).resolve().parents[2]))
 from config.config_loader import get_config
 
 # Get server config
 config = get_config()
-SERVER = config.get_server("coding_vision")  # 35B-A3B Q3_K_S on port 8005
-
-if SERVER is None:
-    print("Warning: coding_vision server not configured. Using fallback.")
-    # Fallback to quality_vision for testing
-    SERVER = config.get_server("quality_vision")
+SERVER = config.get_server("fast_vision")  # 9B on port 8003
 
 
 def encode_image(image_path: str) -> str:
@@ -29,7 +24,7 @@ def encode_image(image_path: str) -> str:
         return base64.b64encode(f.read()).decode("utf-8")
 
 
-def test_vision(image_path: str, prompt: str, max_tokens: int = 100) -> dict:
+def test_vision(image_path: str, prompt: str, max_tokens: int = 200) -> dict:
     """Test vision API with an image"""
     image_data = encode_image(image_path)
 
@@ -52,8 +47,24 @@ def test_vision(image_path: str, prompt: str, max_tokens: int = 100) -> dict:
             },
         ],
         "max_tokens": max_tokens,
-        "temperature": 0.6,
-        "top_p": 0.95,
+    }
+
+    start_time = time.time()
+    response = requests.post(SERVER.api_url, json=payload)
+    elapsed = time.time() - start_time
+
+    return {"response": response.json(), "elapsed": elapsed}
+
+
+def test_text_only(prompt: str, max_tokens: int = 100) -> dict:
+    """Test text-only API"""
+    payload = {
+        "model": SERVER.model,
+        "messages": [
+            {"role": "system", "content": "You are a helpful assistant."},
+            {"role": "user", "content": prompt},
+        ],
+        "max_tokens": max_tokens,
     }
 
     start_time = time.time()
@@ -64,32 +75,36 @@ def test_vision(image_path: str, prompt: str, max_tokens: int = 100) -> dict:
 
 
 def main():
-    if SERVER is None:
-        print("Error: No vision server configured!")
-        sys.exit(1)
-
     if len(sys.argv) < 2:
-        print(f"35B-A3B Vision Test (Port {SERVER.port})")
+        print(f"9B Fast Vision Test (Port {SERVER.port})")
         print()
-        print("Usage: python test_35b_vision.py <image_path> [prompt]")
+        print("Usage: python tests/manual/test_vision.py <image_path> [prompt]")
+        print("       python tests/manual/test_vision.py --text <prompt>")
         print()
         print("Examples:")
-        print("  python test_35b_vision.py screenshot.png 'What do you see?'")
+        print("  python tests/manual/test_vision.py screenshot.png 'What do you see?'")
+        print("  python tests/manual/test_vision.py --text 'Hello, how are you?'")
         sys.exit(1)
 
-    image_path = sys.argv[1]
-    prompt = " ".join(sys.argv[2:]) if len(sys.argv) > 2 else "Describe this image."
+    if sys.argv[1] == "--text":
+        prompt = " ".join(sys.argv[2:]) if len(sys.argv) > 2 else "Hello!"
+        print(f"Testing text-only: {prompt}")
+        print("-" * 50)
+        result = test_text_only(prompt)
+    else:
+        image_path = sys.argv[1]
+        prompt = " ".join(sys.argv[2:]) if len(sys.argv) > 2 else "Describe this image."
 
-    if not Path(image_path).exists():
-        print(f"Error: Image not found: {image_path}")
-        sys.exit(1)
+        if not Path(image_path).exists():
+            print(f"Error: Image not found: {image_path}")
+            sys.exit(1)
 
-    print(f"Testing 35B-A3B Vision: {image_path}")
-    print(f"Server: {SERVER.name} (port {SERVER.port})")
-    print(f"Prompt: {prompt}")
-    print("-" * 50)
+        print(f"Testing 9B Vision: {image_path}")
+        print(f"Server: {SERVER.name} (port {SERVER.port})")
+        print(f"Prompt: {prompt}")
+        print("-" * 50)
+        result = test_vision(image_path, prompt)
 
-    result = test_vision(image_path, prompt)
     data = result["response"]
 
     if "choices" in data:

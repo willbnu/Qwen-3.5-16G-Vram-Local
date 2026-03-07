@@ -4,7 +4,7 @@
 
 param([string]$Model = "")
 
-$ROOT = Split-Path $MyInvocation.MyCommand.Path
+$ROOT = (Resolve-Path (Join-Path (Split-Path $MyInvocation.MyCommand.Path) "..\..")).Path
 
 # Detect binary location
 $benchSM120 = Join-Path $ROOT "llama.cpp\build-sm120\bin\Release\llama-bench.exe"
@@ -64,6 +64,12 @@ $configs = @{
 
 $config = $configs[$Model]
 
+if (-not $config) {
+    Write-Host "[ERROR] Unknown model: $Model" -ForegroundColor Red
+    Write-Host "Use: 35b, 9b, or 27b" -ForegroundColor Yellow
+    exit 1
+}
+
 Write-Host ""
 Write-Host "============================================" -ForegroundColor Cyan
 Write-Host "  Quick Benchmark: $Model model" -ForegroundColor White
@@ -74,15 +80,15 @@ Write-Host ""
 
 # Run llama-bench
 $benchArgs = @(
-    "-m", Join-Path $modelsDir $config.model,
-    "--mmproj", Join-Path $modelsDir $config.mmproj,
+    "-m", (Join-Path $modelsDir $config.model),
+    "--mmproj", (Join-Path $modelsDir $config.mmproj),
     "-p", "512",          # Prompt tokens
     "-n", "128",          # Generation tokens
     "-r", "3",            # Repetitions (quick)
     "-ngl", "99",         # All GPU layers
     "-fa", "1",           # Flash attention on
     "-b", "2048",         # Batch size
-    "-o", "json"          # JSON output
+    "-o", "json",         # JSON output
     "--no-warmup"
 ) + $config.extra
 

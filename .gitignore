@@ -79,6 +79,10 @@ start_*_test.bat
 # --- Raw benchmark JSON ---
 benchmark_*.json
 results/benchmark_*.json
+!results/benchmark_35b_128k_vis_final_20260304.json
+!results/benchmark_35b_152k_vis_final_20260304.json
+!results/benchmark_port8003_20260304_193218.json
+!results/benchmark_port8003_20260304_195811.json
 test_results/
 results/test_results_*.json
 

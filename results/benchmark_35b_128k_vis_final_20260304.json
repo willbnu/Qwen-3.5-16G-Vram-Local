@@ -1,0 +1,139 @@
+{
+  "port": 8002,
+  "timestamp": "2026-03-04T21:12:03.513018",
+  "tests": {
+    "simple": [
+      {
+        "prompt": "What is 2+2?",
+        "time": 0.14,
+        "tokens": 10,
+        "gen_tps": 125.74662055957246,
+        "prompt_tps": 387.18617541571564,
+        "success": true
+      },
+      {
+        "prompt": "What is 2+2?",
+        "time": 0.12,
+        "tokens": 9,
+        "gen_tps": 124.6796425850246,
+        "prompt_tps": 460.13755691175044,
+        "success": true
+      },
+      {
+        "prompt": "What is 2+2?",
+        "time": 0.11,
+        "tokens": 9,
+        "gen_tps": 127.98998833868995,
+        "prompt_tps": 460.6730675977112,
+        "success": true
+      },
+      {
+        "prompt": "Say 'hello'",
+        "time": 0.08,
+        "tokens": 3,
+        "gen_tps": 161.66406207899985,
+        "prompt_tps": 343.29607140558284,
+        "success": true
+      },
+      {
+        "prompt": "Say 'hello'",
+        "time": 0.11,
+        "tokens": 9,
+        "gen_tps": 128.18321654418048,
+        "prompt_tps": 411.27933578387274,
+        "success": true
+      },
+      {
+        "prompt": "Say 'hello'",
+        "time": 0.06,
+        "tokens": 3,
+        "gen_tps": 159.6763891845859,
+        "prompt_tps": 409.1339146444371,
+        "success": true
+      }
+    ],
+    "coding": [
+      {
+        "prompt": "Write a Python function to calculate fibonacci num",
+        "time": 2.36,
+        "tokens": 256,
+        "gen_tps": 111.08743752958897,
+        "prompt_tps": 467.9128746227452,
+        "success": true
+      },
+      {
+        "prompt": "Write a Python function to calculate fibonacci num",
+        "time": 2.36,
+        "tokens": 256,
+        "gen_tps": 110.91844807760133,
+        "prompt_tps": 473.7315836846842,
+        "success": true
+      },
+      {
+        "prompt": "Write a Python function to calculate fibonacci num",
+        "time": 2.36,
+        "tokens": 256,
+        "gen_tps": 110.79670622166785,
+        "prompt_tps": 473.0704638455898,
+        "success": true
+      },
+      {
+        "prompt": "Write a function to check if a string is a palindr",
+        "time": 2.37,
+        "tokens": 256,
+        "gen_tps": 110.6475822638841,
+        "prompt_tps": 547.645125958379,
+        "success": true
+      },
+      {
+        "prompt": "Write a function to check if a string is a palindr",
+        "time": 2.65,
+        "tokens": 256,
+        "gen_tps": 98.51079385846771,
+        "prompt_tps": 555.1532705768767,
+        "success": true
+      },
+      {
+        "prompt": "Write a function to check if a string is a palindr",
+        "time": 1.62,
+        "tokens": 168,
+        "gen_tps": 107.7012137542143,
+        "prompt_tps": 462.5346901017577,
+        "success": true
+      }
+    ],
+    "reasoning": [
+      {
+        "prompt": "If it takes 5 machines 5 minutes to make 5 widgets",
+        "time": 2.4,
+        "tokens": 256,
+        "gen_tps": 109.0186068358925,
+        "prompt_tps": 840.5496803956448,
+        "success": true
+      },
+      {
+        "prompt": "If it takes 5 machines 5 minutes to make 5 widgets",
+        "time": 2.14,
+        "tokens": 207,
+        "gen_tps": 99.35662982311639,
+        "prompt_tps": 859.2782063067024,
+        "success": true
+      },
+      {
+        "prompt": "If it takes 5 machines 5 minutes to make 5 widgets",
+        "time": 1.71,
+        "tokens": 179,
+        "gen_tps": 108.92172361629858,
+        "prompt_tps": 706.4235255462461,
+        "success": true
+      }
+    ]
+  },
+  "summary": {
+    "total_tests": 15,
+    "avg_time": 1.37,
+    "avg_gen_tps": 119.7,
+    "avg_prompt_tps": 523.9,
+    "avg_tokens": 142.2
+  }
+}

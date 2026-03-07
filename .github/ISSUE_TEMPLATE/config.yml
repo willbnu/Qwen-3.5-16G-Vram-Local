@@ -1,0 +1,8 @@
+blank_issues_enabled: false
+contact_links:
+  - name: Security reporting
+    url: https://github.com/willbnu/Qwen-3.5-16G-Vram-Local/security/policy
+    about: Please report security issues using the security policy guidance.
+  - name: Read the setup guide
+    url: https://github.com/willbnu/Qwen-3.5-16G-Vram-Local#quick-start
+    about: Check the README before opening support issues for installation or setup.

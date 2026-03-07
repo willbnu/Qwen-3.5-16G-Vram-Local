@@ -1,5 +1,9 @@
 # qwen-llm
 
+[![CI](https://github.com/willbnu/Qwen-3.5-16G-Vram-Local/actions/workflows/test.yml/badge.svg)](https://github.com/willbnu/Qwen-3.5-16G-Vram-Local/actions/workflows/test.yml)
+[![Release](https://img.shields.io/github/v/release/willbnu/Qwen-3.5-16G-Vram-Local)](https://github.com/willbnu/Qwen-3.5-16G-Vram-Local/releases)
+[![License](https://img.shields.io/github/license/willbnu/Qwen-3.5-16G-Vram-Local)](https://github.com/willbnu/Qwen-3.5-16G-Vram-Local/blob/main/LICENSE)
+
 Tested configs, launchers, and benchmark helpers for running Qwen3.5 GGUF models on a single 16GB NVIDIA GPU with `llama.cpp`.
 
 This repo is aimed at people who want a fast local Qwen setup without reverse-engineering a pile of Discord messages, Reddit comments, and half-working launch flags.

@@ -30,7 +30,7 @@ jobs:
 
     - name: Run tests
       run: |
-        pytest tests/test_config_loader.py -v
+        pytest tests/ -v
 
   dashboard:
     name: Dashboard Build
@@ -57,4 +57,3 @@ jobs:
     - name: Type Check
       working-directory: ./dashboard
       run: npx tsc --noEmit
-      continue-on-error: true

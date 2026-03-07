@@ -1,7 +1,7 @@
 # AGENTS.md
 
 **Project**: qwen-llm (Qwen3.5 Local LLM on 16GB GPU)
-**Version**: 1.4.0
+**Version**: 1.6.0
 **Purpose**: Configuration, benchmarking, and tooling for running Qwen3.5 models locally
 
 ---

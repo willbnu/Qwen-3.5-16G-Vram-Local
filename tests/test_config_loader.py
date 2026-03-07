@@ -151,6 +151,14 @@ class TestConfig:
             profile = config.get_profile(profile_name)
             assert profile is not None, f"Profile '{profile_name}' not found"
 
+    def test_16gb_profiles_are_single_server_presets(self):
+        """Test shipped profiles stay aligned with the one-server-at-a-time guidance."""
+        config = get_config()
+        for profile_name in ["standard", "speed", "minimal", "quality", "uncensored"]:
+            profile = config.get_profile(profile_name)
+            assert profile is not None
+            assert len(profile.servers) == 1, f"{profile_name} should map to one server"
+
     def test_get_servers_for_profile(self):
         """Test getting servers for a profile"""
         config = get_config()

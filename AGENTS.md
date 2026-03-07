@@ -486,7 +486,7 @@ huggingface-cli download unsloth/Qwen3.5-27B-GGUF \
   --local-dir ./models/unsloth-gguf/
 ```
 
-Or use the helper script: `download_model.ps1`
+Or use the helper script: `scripts/windows/download_model.ps1`
 
 > **Note**: mmproj filenames differ by model. Check `config/servers.yaml` for exact filenames.
 

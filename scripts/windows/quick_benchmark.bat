@@ -10,13 +10,15 @@ REM ============================================================================
 
 setlocal enabledelayedexpansion
 
-set MODELS_DIR=%~dp0models\unsloth-gguf
-set LLAMA_BENCH=%~dp0llama-bin\llama-bench.exe
-set LLAMA_SERVER=%~dp0llama.cpp\build-sm120\bin\Release\llama-server.exe
-set RESULTS_DIR=%~dp0results
+for %%I in ("%~dp0..\..") do set ROOT=%%~fI
+
+set MODELS_DIR=%ROOT%\models\unsloth-gguf
+set LLAMA_BENCH=%ROOT%\llama-bin\llama-bench.exe
+set LLAMA_SERVER=%ROOT%\llama.cpp\build-sm120\bin\Release\llama-server.exe
+set RESULTS_DIR=%ROOT%\results
 
 REM Fallback to prebuilt if SM120 not found
-if not exist "%LLAMA_SERVER%" set LLAMA_SERVER=%~dp0llama-bin\llama-server.exe
+if not exist "%LLAMA_SERVER%" set LLAMA_SERVER=%ROOT%\llama-bin\llama-server.exe
 
 if not exist "%RESULTS_DIR%" mkdir "%RESULTS_DIR%"
 

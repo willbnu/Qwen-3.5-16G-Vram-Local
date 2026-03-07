@@ -7,7 +7,7 @@ param(
     [switch]$LanMode
 )
 
-$ROOT    = Split-Path $MyInvocation.MyCommand.Path
+$ROOT    = (Resolve-Path (Join-Path (Split-Path $MyInvocation.MyCommand.Path) "..\..")).Path
 $EXE_SM120 = "$ROOT\llama.cpp\build-sm120\bin\Release\llama-server.exe"
 $EXE_PREBUILT = "$ROOT\llama-bin\llama-server.exe"
 

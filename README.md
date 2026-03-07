@@ -2,7 +2,23 @@
 
 Tested configs, launchers, and benchmark helpers for running Qwen3.5 GGUF models on a single 16GB NVIDIA GPU with `llama.cpp`.
 
-This README is intentionally narrow. It focuses on what the repository actually ships today, what was measured on the checked-in test machine, and where the evidence is still incomplete.
+This repo is aimed at people who want a fast local Qwen setup without reverse-engineering a pile of Discord messages, Reddit comments, and half-working launch flags.
+
+It stays strict about evidence, but it should still feel useful at a glance: what works, what was measured, what ships in the repo, and what still needs more data.
+
+| What you get | Current repo stance |
+| --- | --- |
+| 35B coding preset that fits a 16GB card | Verified on the checked-in RTX 5080 test machine |
+| Vision-capable local setup | Implemented and usable, but image throughput claims are kept narrower than text benchmarks |
+| One-command launchers and API helper | Shipped in this repo |
+| Benchmark numbers | Backed by checked-in JSON artifacts |
+| Cross-GPU claims | Treated as estimates until reproduced elsewhere |
+
+## Why This Repo Exists
+
+- The 35B preset is the main attraction: a practical local coding model that still feels fast on a single 16GB GPU.
+- The repo keeps the launchers, config, helper scripts, and benchmark artifacts in one place so people can reproduce the setup instead of copy-pasting random command lines.
+- The goal is not to sound maximalist. The goal is to help someone get from zero to a working, measured setup quickly.
 
 ## Scope
 

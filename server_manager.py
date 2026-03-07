@@ -3,6 +3,7 @@ Server Manager - Start/Stop/Status for Qwen3.5 servers.
 Uses the unified configuration system.
 """
 
+import os
 import subprocess
 import sys
 import time
@@ -17,6 +18,26 @@ LOGS_DIR = BASE_DIR / "logs"
 LOGS_DIR.mkdir(exist_ok=True)
 
 
+def build_runtime_env() -> dict[str, str]:
+    """Build an environment with likely CUDA runtime paths available to llama.cpp."""
+    env = os.environ.copy()
+    candidate_dirs = [
+        BASE_DIR / "venv" / "Lib" / "site-packages" / "torch" / "lib",
+        BASE_DIR / "venv_vllm" / "Lib" / "site-packages" / "torch" / "lib",
+    ]
+
+    existing = []
+    for candidate in candidate_dirs:
+        if candidate.exists():
+            existing.append(str(candidate))
+
+    if existing:
+        current_path = env.get("PATH", "")
+        env["PATH"] = os.pathsep.join(existing + [current_path])
+
+    return env
+
+
 def build_server_command(server: ServerConfig) -> list:
     """Build the llama-server command for a server"""
     config = get_config()
@@ -26,6 +47,7 @@ def build_server_command(server: ServerConfig) -> list:
 def start_server(server: ServerConfig, window_title: str = None) -> subprocess.Popen:
     """Start a single server"""
     cmd = build_server_command(server)
+    env = build_runtime_env()
 
     if window_title is None:
         window_title = server.name
@@ -43,6 +65,7 @@ def start_server(server: ServerConfig, window_title: str = None) -> subprocess.P
                 cmd,
                 stdout=log,
                 stderr=log,
+                env=env,
                 creationflags=subprocess.CREATE_NEW_CONSOLE,
                 startupinfo=startupinfo,
             )

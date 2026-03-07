@@ -233,3 +233,29 @@ If you update numbers or claims:
 - Commit raw JSON results with any new benchmark summary.
 - Separate measured facts from extrapolation.
 - Avoid claiming support for workflows that are not implemented in the repo.
+
+## Development Workflow
+
+This repo now uses a two-worktree local workflow:
+
+- `C:\Users\Admin\Documents\Projects\qwen-llm` is the personal dev workspace on `personal/dev`
+- `C:\Users\Admin\Documents\Projects\qwen-llm-release` is the clean release workspace on `main`
+- normal work happens in the dev workspace
+- only reviewed commits get cherry-picked into the release workspace
+- only the release workspace is allowed to push to GitHub
+
+Windows helper scripts:
+
+```powershell
+scripts/windows/setup-worktrees.ps1
+scripts/windows/promote-to-release.ps1 <commit-sha>
+scripts/windows/check-release.ps1
+scripts/windows/push-release.ps1
+```
+
+Recommended flow:
+
+1. Work and commit in `qwen-llm` on `personal/dev`
+2. Promote selected commits into `qwen-llm-release`
+3. Run the release checks there
+4. Push only from `qwen-llm-release`

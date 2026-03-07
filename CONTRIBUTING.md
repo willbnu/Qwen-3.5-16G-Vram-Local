@@ -77,6 +77,30 @@ pytest tests/test_config_loader.py -v
 cd dashboard && npm run lint
 ```
 
+## Maintainer Workflow
+
+Repository maintainers use a two-worktree setup locally:
+
+- `qwen-llm` on `personal/dev` for normal development
+- `qwen-llm-release` on `main` for clean review and pushes
+
+Windows helper scripts:
+
+```powershell
+scripts/windows/setup-worktrees.ps1
+scripts/windows/promote-to-release.ps1 <commit-sha>
+scripts/windows/check-release.ps1
+scripts/windows/push-release.ps1
+```
+
+Maintainer rules:
+
+1. Do everyday work in `qwen-llm`
+2. Never push from the dev workspace
+3. Promote only reviewed commits into `qwen-llm-release`
+4. Run release checks in `qwen-llm-release`
+5. Push only from `qwen-llm-release`
+
 ## Commit Convention
 
 Use [Conventional Commits](https://www.conventionalcommits.org/):

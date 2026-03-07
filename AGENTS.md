@@ -20,6 +20,28 @@ This project provides production-ready configurations and tooling for running Qw
 
 ## Essential Commands
 
+### Local Git Workflow (Windows)
+
+```bash
+# One-time setup
+scripts/windows/setup-worktrees.ps1
+
+# Promote reviewed commit(s) from dev -> release
+scripts/windows/promote-to-release.ps1 <commit-sha>
+
+# Validate the clean release workspace
+scripts/windows/check-release.ps1
+
+# Push only from qwen-llm-release on main
+scripts/windows/push-release.ps1
+```
+
+**Rules:**
+- Do normal work in `qwen-llm` on `personal/dev`
+- Do not push from the dev workspace
+- Promote only reviewed commits into `qwen-llm-release`
+- Push only from `qwen-llm-release`
+
 ### Server Management (Windows)
 
 ```bash

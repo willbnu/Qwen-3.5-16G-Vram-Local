@@ -141,13 +141,27 @@ class Config:
     """Main configuration class"""
 
     def __init__(self, config_path: Path = CONFIG_FILE):
-        with open(config_path, "r") as f:
-            self._raw = yaml.safe_load(f)
-
+        self._raw = yaml.safe_load(self._read_config_text(config_path))
         self._load_paths()
         self._load_servers()
         self._load_profiles()
         self._load_benchmark()
+
+    @staticmethod
+    def _read_config_text(config_path: Path) -> str:
+        """Read YAML config robustly across UTF-8 and legacy Windows encodings."""
+        for encoding in ("utf-8", "utf-8-sig", "cp1252"):
+            try:
+                return config_path.read_text(encoding=encoding)
+            except UnicodeDecodeError:
+                continue
+        raise UnicodeDecodeError(
+            "config",
+            b"",
+            0,
+            1,
+            f"Unable to decode config file: {config_path}",
+        )
 
     def _resolve_repo_path(self, raw_path: str) -> Path:
         """Resolve configured paths relative to the repository root."""

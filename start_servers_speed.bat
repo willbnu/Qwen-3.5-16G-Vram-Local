@@ -13,7 +13,7 @@ if /i "%PROFILE%"=="coding" (
     set "TITLE=35B-A3B Q3_K_S"
     set "PORT=8002"
     set "SPEED=~120 t/s text generation"
-    set "CONTEXT=120K default"
+    set "CONTEXT=256K max"
     set "NOTES=mmproj loaded, one server at a time"
     goto :run
 )
@@ -47,16 +47,16 @@ echo   start_servers_speed.bat quality
 exit /b 1
 
 :run
-where py >nul 2>nul
+where python >nul 2>nul
 if %ERRORLEVEL%==0 (
-    set "PY_LAUNCHER=py -3"
+    set "PY_LAUNCHER=python"
 ) else (
-    where python >nul 2>nul
+    where py >nul 2>nul
     if not %ERRORLEVEL%==0 (
         echo [ERROR] Python 3.11+ was not found on PATH.
         exit /b 1
     )
-    set "PY_LAUNCHER=python"
+    set "PY_LAUNCHER=py -3"
 )
 
 echo.
@@ -79,7 +79,7 @@ if "%PY_LAUNCHER%"=="py -3" (
     python server_manager.py stop >nul 2>nul
 )
 
-timeout /t 2 /nobreak >nul
+ping 127.0.0.1 -n 3 >nul
 
 echo Starting %SERVER_KEY% using config\servers.yaml...
 if "%PY_LAUNCHER%"=="py -3" (

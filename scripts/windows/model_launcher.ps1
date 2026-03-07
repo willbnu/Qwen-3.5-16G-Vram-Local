@@ -126,10 +126,11 @@ Write-Host ""
 Write-Host "    Poll until ready:" -ForegroundColor DarkGray
 Write-Host "      curl http://127.0.0.1:$port/health" -ForegroundColor White
 if ($LanMode) {
+    $lanHint = "<your-lan-ip>"
     Write-Host ""
     Write-Host "    LAN Access (from other devices):" -ForegroundColor Green
-    Write-Host "      Browser: http://192.168.1.87:$port" -ForegroundColor White
-    Write-Host "      API:     http://192.168.1.87:$port/v1/chat/completions" -ForegroundColor White
+    Write-Host "      Browser: http://$lanHint:$port" -ForegroundColor White
+    Write-Host "      API:     http://$lanHint:$port/v1/chat/completions" -ForegroundColor White
 }
 Write-Host ""
 Write-Host "    When health = ok, open a NEW terminal:" -ForegroundColor DarkGray

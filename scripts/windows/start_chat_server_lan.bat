@@ -1,10 +1,9 @@
 @echo off
 REM ============================================================================
-REM  Qwen3.5 — LAN Mode (accessible from other devices)
-REM  
-REM  Your LAN IP: 192.168.1.87
-REM  
-REM  From Mac browser: http://192.168.1.87:8002
+REM  Qwen3.5 - LAN Mode (accessible from other devices)
+REM
+REM  Replace <your-lan-ip> with the address shown by ipconfig / ifconfig
+REM  Example: http://<your-lan-ip>:8002
 REM ============================================================================
 
 set MODEL=%~1

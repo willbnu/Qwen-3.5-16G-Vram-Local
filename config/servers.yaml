@@ -196,18 +196,18 @@ profiles:
   # Standard profile - Most common use
   standard:
     name: "Standard Setup"
-    description: "Coding + Fast Vision + Quality Vision"
-    servers: ["coding", "fast_vision", "quality_vision"]
-    total_vram_gb: 33 # Will use CPU offload
-    warning: "Exceeds VRAM, some models will use CPU offload"
+    description: "Default 35B coding preset for daily use"
+    servers: ["coding"]
+    total_vram_gb: 15.3
+    warning: null
 
   # Speed profile - Fastest responses
   speed:
     name: "Speed Optimized"
-    description: "Coding + Fast Vision only"
-    servers: ["coding", "fast_vision"]
-    total_vram_gb: 20
-    warning: "Still exceeds VRAM, 35B may offload partially"
+    description: "Same 35B coding preset, kept for backwards compatibility"
+    servers: ["coding"]
+    total_vram_gb: 15.3
+    warning: null
 
   # Minimal profile - Guaranteed VRAM fit
   minimal:
@@ -220,18 +220,18 @@ profiles:
   # Quality profile - Best quality
   quality:
     name: "Quality First"
-    description: "Quality Vision + Fast Vision"
-    servers: ["quality_vision", "fast_vision"]
-    total_vram_gb: 19
-    warning: "May exceed VRAM with long contexts"
+    description: "27B quality preset for slower but stronger output"
+    servers: ["quality_vision"]
+    total_vram_gb: 14.5
+    warning: null
 
   # Uncensored profile
   uncensored:
     name: "Uncensored Mode"
-    description: "Uncensored + Fast Vision"
-    servers: ["uncensored", "fast_vision"]
-    total_vram_gb: 22
-    warning: "Uncensored will be slow due to VRAM"
+    description: "Uncensored 35B preset; fits poorly on 16GB and will be slow"
+    servers: ["uncensored"]
+    total_vram_gb: 16
+    warning: "This preset is VRAM-constrained on 16GB GPUs."
 
 # ============================================
 # Benchmark Configuration

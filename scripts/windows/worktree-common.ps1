@@ -25,8 +25,8 @@ function Get-WorkspacePaths {
 
     $parent = Split-Path (Normalize-Path $RepoRoot) -Parent
     return @{
-        DevRoot = (Normalize-Path (Join-Path $parent "qwen-llm"))
-        ReleaseRoot = (Normalize-Path (Join-Path $parent "qwen-llm-release"))
+        DevRoot = (Normalize-Path (Join-Path $parent "qwen-llm-git"))
+        ReleaseRoot = (Normalize-Path (Join-Path $parent "qwen-llm-release-git"))
     }
 }
 

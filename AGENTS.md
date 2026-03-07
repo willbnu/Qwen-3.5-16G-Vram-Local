@@ -32,15 +32,15 @@ scripts/windows/promote-to-release.ps1 <commit-sha>
 # Validate the clean release workspace
 scripts/windows/check-release.ps1
 
-# Push only from qwen-llm-release on main
+# Push only from qwen-llm-release-git on main
 scripts/windows/push-release.ps1
 ```
 
 **Rules:**
-- Do normal work in the dev worktree on `personal/dev`
+- Do normal work in the dev worktree on `personal/dev` in `qwen-llm-git`
 - Do not push from the dev workspace
 - Promote only reviewed commits into the release worktree
-- Push only from the release worktree
+- Push only from `qwen-llm-release-git`
 
 ### Server Management (Windows)
 

@@ -50,4 +50,4 @@ Write-Host "  Dev branch        : $(Get-CurrentBranch -RepoRoot $paths.DevRoot)"
 Write-Host "  Release workspace : $($paths.ReleaseRoot)" -ForegroundColor White
 Write-Host "  Release branch    : $(Get-CurrentBranch -RepoRoot $paths.ReleaseRoot)" -ForegroundColor White
 Write-Host ""
-Write-Host "Rule: develop in qwen-llm, promote commits, push only from qwen-llm-release." -ForegroundColor Yellow
+Write-Host "Rule: develop in qwen-llm-git, promote commits, push only from qwen-llm-release-git." -ForegroundColor Yellow

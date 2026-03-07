@@ -11,9 +11,20 @@ Run:
 
 import sys
 import os
+import pytest
 
 # Add project root to path
 sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+try:
+    import qwen_agent as _qwen_agent
+except ImportError:
+    _qwen_agent = None
+
+pytestmark = pytest.mark.skipif(
+    _qwen_agent is None,
+    reason="qwen_agent is optional and is not installed in this environment",
+)
 
 
 def test_basic_chat():

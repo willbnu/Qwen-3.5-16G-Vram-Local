@@ -1,11 +1,8 @@
 """
-Qwen3.5 API Helper with Official Best Practices
+Qwen3.5 API helper for the repo's recommended local llama.cpp presets.
 
-This module provides easy-to-use functions for calling the Qwen3.5 local API
-with the recommended sampling parameters from the official documentation.
-
-Official Best Practices (from Qwen3.5 docs):
-https://huggingface.co/Qwen/Qwen3.5-35B-A3B
+Sampling defaults follow the official Qwen guidance, while default model names
+match the 16GB-oriented configuration shipped in this repository.
 """
 
 import base64
@@ -88,7 +85,7 @@ class QwenAPI:
     def __init__(
         self,
         base_url: str = "http://127.0.0.1:8002",
-        model: str = "Qwen3.5-35B-A3B-Q4_K_M.gguf",
+        model: str = "Qwen3.5-35B-A3B-Q3_K_S.gguf",
     ):
         self.base_url = base_url.rstrip("/")
         self.model = model
@@ -228,7 +225,7 @@ class QwenAPI:
 
 
 # Convenience instances
-api_35b = QwenAPI(base_url="http://127.0.0.1:8002", model="Qwen3.5-35B-A3B-Q4_K_M.gguf")
+api_35b = QwenAPI(base_url="http://127.0.0.1:8002", model="Qwen3.5-35B-A3B-Q3_K_S.gguf")
 
 api_9b_vision = QwenAPI(
     base_url="http://127.0.0.1:8003", model="Qwen3.5-9B-UD-Q4_K_XL.gguf"

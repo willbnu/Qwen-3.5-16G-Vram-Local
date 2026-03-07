@@ -139,6 +139,59 @@ servers:
     description: "27B dense — 46 t/s, ~300 t/s prompt, 96K ctx, vision, best quality/token"
     benchmark_verified: "2026-03-05 | iq4_nl KV + 96K ctx = 46 t/s (same as 64K q8_0 but +50% context)"
 
+  # 27B TEXT AGENT SERVER - Base dense model with patched developer-role template
+  # Keeps thinking enabled for coding agents that send developer messages.
+  quality_text_agent:
+    enabled: false # Experimental agent preset
+    port: 8008
+    name: "Qwen3.5-27B-Agent"
+    model: "Qwen3.5-27B-Q3_K_S.gguf"
+    config:
+      context: 65536 # Text-only preset; no mmproj overhead
+      gpu_layers: 99
+      flash_attn: "on"
+      cache_type_k: "iq4_nl"
+      cache_type_v: "iq4_nl"
+      parallel: 1
+      temp: 0.6
+      top_p: 0.95
+      top_k: 20
+      presence_penalty: 0.0
+      enable_thinking: true
+      reasoning_budget: -1
+      batch_size: 1024
+      ubatch_size: 256
+      chat_template_file: "./config/templates/qwen3.5-developer-thinking.jinja"
+    vram_estimate_gb: 13.0 # text-only estimate on RTX 5080 16GB
+    use_case: "quality_agent"
+    description: "27B dense text-only agent preset with developer-role template and thinking enabled"
+
+  # DISTILLED REASONING SERVER - Claude 4.6 Opus distilled into Qwen3.5-27B dense
+  # Fine-tuned at 8K, so keep the default context conservative until longer-context behavior is re-verified.
+  qwopus_reasoning:
+    enabled: false # Experimental distilled preset
+    port: 8009
+    name: "Qwopus-27B-Reasoning"
+    model: "Qwen3.5-27B.Q3_K_S.gguf"
+    config:
+      context: 32768
+      gpu_layers: 99
+      flash_attn: "on"
+      cache_type_k: "iq4_nl"
+      cache_type_v: "iq4_nl"
+      parallel: 1
+      temp: 0.6
+      top_p: 0.95
+      top_k: 20
+      presence_penalty: 0.0
+      enable_thinking: true
+      reasoning_budget: -1
+      batch_size: 1024
+      ubatch_size: 256
+    vram_estimate_gb: 12.7 # text-only estimate on RTX 5080 16GB
+    use_case: "qwopus"
+    description: "Distilled 27B reasoning preset (text-only, thinking enabled, conservative 32K context)"
+
   # CODING + VISION SERVER - Hybrid capability
   coding_vision:
     enabled: false # Optional, enable when needed
@@ -224,6 +277,20 @@ profiles:
     servers: ["quality_vision"]
     total_vram_gb: 14.5
     warning: null
+
+  quality_agent:
+    name: "Quality Agent"
+    description: "27B dense text-only agent preset with developer-role fix"
+    servers: ["quality_text_agent"]
+    total_vram_gb: 13.0
+    warning: "Experimental preset for coding agents; verify outputs before release use."
+
+  qwopus:
+    name: "Qwopus Reasoning"
+    description: "Distilled 27B reasoning preset for local comparison"
+    servers: ["qwopus_reasoning"]
+    total_vram_gb: 12.7
+    warning: "Fine-tuned at shorter context; keep prompts moderate until long-context behavior is re-tested."
 
   # Uncensored profile
   uncensored:

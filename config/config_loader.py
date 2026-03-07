@@ -3,10 +3,11 @@ Configuration loader for Qwen3.5 LLM servers.
 Loads settings from config/servers.yaml and provides easy access.
 """
 
+import json
 import yaml
 from pathlib import Path
 from dataclasses import dataclass, field
-from typing import Optional, Dict, List
+from typing import Any, Optional, Dict, List
 
 # Base directory
 BASE_DIR = Path(__file__).parent.parent
@@ -35,11 +36,15 @@ class ServerConfig:
     use_case: str
     description: str
     models_dir: Path = field(repr=False)
+    chat_template_file: Optional[Path] = field(repr=False, default=None)
     enabled: bool = True
     mmproj_offload: bool = False  # GPU offload for vision projector
     batch_size: int = 1024  # -b parameter
     ubatch_size: int = 256  # -ub parameter
     fit_target: Optional[int] = None  # --fit-target for dynamic context fitting
+    parallel: Optional[int] = None
+    reasoning_budget: Optional[int] = None
+    chat_template_kwargs: Optional[Dict[str, Any]] = None
 
     @property
     def model_path(self) -> Path:
@@ -100,11 +105,23 @@ class ServerConfig:
             if self.mmproj_offload:
                 cmd.append("--mmproj-offload")
 
+        if self.parallel is not None:
+            cmd.extend(["--parallel", str(self.parallel)])
+
         if self.fit_target:
             cmd.extend(["--fit", "on", "--fit-target", str(self.fit_target)])
 
-        if not self.enable_thinking:
-            cmd.extend(["--chat-template-kwargs", '{"enable_thinking":false}'])
+        if self.reasoning_budget is not None:
+            cmd.extend(["--reasoning-budget", str(self.reasoning_budget)])
+
+        if self.chat_template_file:
+            cmd.extend(["--chat-template-file", str(self.chat_template_file)])
+
+        template_kwargs = dict(self.chat_template_kwargs or {})
+        if not self.enable_thinking and "enable_thinking" not in template_kwargs:
+            template_kwargs["enable_thinking"] = False
+        if template_kwargs:
+            cmd.extend(["--chat-template-kwargs", json.dumps(template_kwargs, sort_keys=True)])
 
         return cmd
 
@@ -173,11 +190,19 @@ class Config:
                 use_case=data["use_case"],
                 description=data["description"],
                 models_dir=self.models_dir,
+                chat_template_file=(
+                    self._resolve_repo_path(cfg["chat_template_file"])
+                    if cfg.get("chat_template_file")
+                    else None
+                ),
                 enabled=data.get("enabled", True),
                 mmproj_offload=cfg.get("mmproj_offload", False),
                 batch_size=cfg.get("batch_size", 1024),
                 ubatch_size=cfg.get("ubatch_size", 256),
                 fit_target=cfg.get("fit_target"),
+                parallel=cfg.get("parallel"),
+                reasoning_budget=cfg.get("reasoning_budget"),
+                chat_template_kwargs=cfg.get("chat_template_kwargs"),
             )
 
     def _load_profiles(self):

@@ -67,6 +67,29 @@ class TestServerConfig:
         assert "-ub" in cmd and str(server.ubatch_size) in cmd
         assert "--fit-target" in cmd and str(server.fit_target) in cmd
 
+    def test_to_llama_command_includes_parallel_and_reasoning_budget(self):
+        """Test YAML tuning flags reach llama-server command generation."""
+        config = get_config()
+        server = config.get_server("coding")
+        assert server is not None
+
+        cmd = server.to_llama_command(config.llama_dir)
+
+        assert "--parallel" in cmd and "1" in cmd
+        assert "--reasoning-budget" in cmd and "0" in cmd
+
+    def test_to_llama_command_supports_custom_chat_template_files(self):
+        """Test experimental presets can point llama-server at a local template file."""
+        config = get_config()
+        server = config.get_server("quality_text_agent")
+        assert server is not None
+
+        cmd = server.to_llama_command(config.llama_dir)
+
+        assert "--chat-template-file" in cmd
+        assert str(server.chat_template_file) in cmd
+        assert "--chat-template-kwargs" not in cmd
+
 
 class TestConfig:
     def test_load_config(self):
@@ -98,7 +121,15 @@ class TestConfig:
     def test_servers_exist(self):
         """Test expected servers are loaded"""
         config = get_config()
-        expected_servers = ["coding", "fast_vision", "quality_vision", "coding_vision", "uncensored"]
+        expected_servers = [
+            "coding",
+            "fast_vision",
+            "quality_vision",
+            "quality_text_agent",
+            "qwopus_reasoning",
+            "coding_vision",
+            "uncensored",
+        ]
         for server_name in expected_servers:
             server = config.get_server(server_name)
             assert server is not None, f"Server '{server_name}' not found"
@@ -110,6 +141,8 @@ class TestConfig:
             "coding": 8002,
             "fast_vision": 8003,
             "quality_vision": 8004,
+            "quality_text_agent": 8008,
+            "qwopus_reasoning": 8009,
             "coding_vision": 8005,
             "uncensored": 8006,
         }
@@ -146,7 +179,7 @@ class TestConfig:
     def test_profiles_exist(self):
         """Test expected profiles are loaded"""
         config = get_config()
-        expected_profiles = ["standard", "speed", "minimal", "quality", "uncensored"]
+        expected_profiles = ["standard", "speed", "minimal", "quality", "quality_agent", "qwopus", "uncensored"]
         for profile_name in expected_profiles:
             profile = config.get_profile(profile_name)
             assert profile is not None, f"Profile '{profile_name}' not found"
@@ -154,7 +187,7 @@ class TestConfig:
     def test_16gb_profiles_are_single_server_presets(self):
         """Test shipped profiles stay aligned with the one-server-at-a-time guidance."""
         config = get_config()
-        for profile_name in ["standard", "speed", "minimal", "quality", "uncensored"]:
+        for profile_name in ["standard", "speed", "minimal", "quality", "quality_agent", "qwopus", "uncensored"]:
             profile = config.get_profile(profile_name)
             assert profile is not None
             assert len(profile.servers) == 1, f"{profile_name} should map to one server"
@@ -255,7 +288,7 @@ class TestSingletonFunctions:
         """Test get_all_servers returns all servers"""
         from config_loader import get_all_servers
         servers = get_all_servers()
-        assert len(servers) == 6
+        assert len(servers) == 8
 
     def test_singleton_get_server(self):
         """Test module-level get_server function"""
@@ -294,7 +327,8 @@ class TestEdgeCases:
     def test_profile_servers_are_valid(self):
         """Test all servers in profiles exist"""
         config = get_config()
-        for profile_key in ["standard", "speed", "minimal", "quality", "uncensored"]:
-            servers = config.get_servers_for_profile(profile_key)
-            for server in servers:
-                assert config.get_server(server.use_case) is not None or server.enabled
+        for profile_key in ["standard", "speed", "minimal", "quality", "quality_agent", "qwopus", "uncensored"]:
+            profile = config.get_profile(profile_key)
+            assert profile is not None
+            for server_key in profile.servers:
+                assert config.get_server(server_key) is not None

@@ -56,25 +56,23 @@ def start_server(server: ServerConfig, window_title: str = None) -> subprocess.P
 
     # Windows: use start command to run in new window
     if sys.platform == "win32":
-        startupinfo = subprocess.STARTUPINFO()
-        startupinfo.dwFlags |= subprocess.STARTF_USESHOWWINDOW
-        startupinfo.wShowWindow = 6  # SW_MINIMIZE
-
         with open(log_file, "w") as log:
             proc = subprocess.Popen(
                 cmd,
                 stdout=log,
                 stderr=log,
+                stdin=subprocess.DEVNULL,
                 env=env,
-                creationflags=subprocess.CREATE_NEW_CONSOLE,
-                startupinfo=startupinfo,
+                creationflags=(
+                    subprocess.DETACHED_PROCESS | subprocess.CREATE_NEW_PROCESS_GROUP
+                ),
             )
         print(f"  Started {server.name} on port {server.port} (PID: {proc.pid})")
         return proc
     else:
         # Linux/Mac: use subprocess
         with open(log_file, "w") as log:
-            proc = subprocess.Popen(cmd, stdout=log, stderr=log)
+            proc = subprocess.Popen(cmd, stdout=log, stderr=log, stdin=subprocess.DEVNULL)
         print(f"  Started {server.name} on port {server.port} (PID: {proc.pid})")
         return proc
 

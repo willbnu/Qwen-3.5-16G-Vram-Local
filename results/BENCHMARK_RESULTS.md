@@ -26,7 +26,7 @@ Interpretation:
 
 - These runs support the claim that text generation remains fast with the vision projector loaded.
 - They do not, by themselves, prove that image requests have identical throughput.
-- The repo default is still 120K on Windows because it leaves more headroom than the 155,904-token reference case.
+- The repo now ships a 256K coding preset, but that should be treated as a max-context profile rather than the safest daily default.
 
 ## 9B Artifacts
 
@@ -53,6 +53,7 @@ The repository currently ships a `quality_vision` preset at 96K context in [conf
 | File | Config | Notes |
 | --- | --- | --- |
 | [best_models_27b32k_20260307_194413.json](best_models_27b32k_20260307_194413.json) | `IQ4_XS + iq4_nl + 32K` | current best 27B speed/quality point |
+| [benchmark_iq4xs_vision_20260307_160309.json](benchmark_iq4xs_vision_20260307_160309.json) | `IQ4_XS + iq4_nl + 32K/64K` with `mmproj` | validated 27B IQ4_XS vision path |
 
 Treat any 27B speed quoted elsewhere in the repo as approximate unless it is backed by a committed JSON file.
 
@@ -60,7 +61,7 @@ Treat any 27B speed quoted elsewhere in the repo as approximate unless it is bac
 
 - `--parallel 1` is required for the 35B preset on the tested machine.
 - The 35B preset is a one-server-at-a-time setup on 16GB cards.
-- `155904` tokens is a useful measured reference point, but the shipped default is `122880`.
+- `155904` tokens is still a useful measured reference point, even though the shipped coding preset is now `262144`.
 - Historical docs in this repo may contain older summary numbers; prefer the artifact files.
 - Strongest overall model on this machine remains `35B Q3_K_S`.
 - Best 27B configuration is `IQ4_XS + iq4_nl`, especially at `32K`.

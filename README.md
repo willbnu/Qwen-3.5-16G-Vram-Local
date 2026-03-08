@@ -39,7 +39,8 @@ It stays strict about evidence, but it should still feel useful at a glance: wha
 - Primary test machine: RTX 5080 16GB, Windows 11, `llama.cpp` b8196+.
 - Primary workflow: one server at a time.
 - Primary 35B preset: `Qwen3.5-35B-A3B-Q3_K_S.gguf` with `mmproj` loaded and `--parallel 1`.
-- Default 35B context in this repo: `122880` tokens (120K), chosen for better Windows headroom.
+- Shipped 35B context in this repo: `262144` tokens (256K) for maximum local context.
+- Recommended day-to-day 35B operating point: `64K` to `120K` for better headroom and speed.
 
 ## What Is Verified Here ✅
 
@@ -60,9 +61,15 @@ It stays strict about evidence, but it should still feel useful at a glance: wha
 
 | Key | Port | Model | Default Context | Estimated VRAM | Use |
 | --- | --- | --- | --- | --- | --- |
-| `coding` | 8002 | `Qwen3.5-35B-A3B-Q3_K_S.gguf` | 120K | 15.3 GB | Primary coding and general reasoning |
+| `coding` | 8002 | `Qwen3.5-35B-A3B-Q3_K_S.gguf` | 256K | 15.7 GB | Maximum local context, edge-fit on 16 GB |
 | `fast_vision` | 8003 | `Qwen3.5-9B-UD-Q4_K_XL.gguf` | 256K | 10.6 GB | Fast image input and lighter chat |
 | `quality_vision` | 8004 | `Qwen3.5-27B-Q3_K_S.gguf` | 96K | 14.5 GB | Higher quality output, slower generation |
+
+Best measured presets from the March 7-8 benchmark sweep:
+
+- 35B strongest overall: `Q3_K_S + iq4_nl`
+- 27B best general preset: `IQ4_XS + iq4_nl + 32K`
+- 9B best practical preset: `UD-Q4_K_XL + q8_0 + 256K`
 
 The canonical settings live in [config/servers.yaml](config/servers.yaml).
 
@@ -89,6 +96,7 @@ Important caveat: those files measure text generation on a server with vision su
 Additional notes and historical summaries are in:
 
 - [results/BENCHMARK_RESULTS.md](results/BENCHMARK_RESULTS.md)
+- [docs/BENCHMARKING.md](docs/BENCHMARKING.md)
 - [DISCOVERY.md](DISCOVERY.md)
 - [docs/CONTEXT_SIZE_ANALYSIS.md](docs/CONTEXT_SIZE_ANALYSIS.md)
 
@@ -207,7 +215,8 @@ vision = api_9b_vision.vision(
 <a id="context-guidance"></a>
 ## Context Guidance 🧠
 
-- The repo default is 120K for the 35B preset because it leaves more Windows headroom than the 155,904-token ceiling case.
+- The shipped `coding` preset is now 256K for maximum local context.
+- The better day-to-day 35B operating point is still 64K to 120K when speed and headroom matter more than maximum context.
 - The `155,904` figure is a measured reference point on the tested RTX 5080 machine, not a promise for every other GPU.
 - The explanation in [DISCOVERY.md](DISCOVERY.md) is an informed hypothesis based on observed buffers and timings, not a proven `llama.cpp` root-cause analysis.
 

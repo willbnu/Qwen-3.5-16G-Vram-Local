@@ -359,3 +359,4 @@ quality_tests:
       requires_image: true
     - prompt: "What is the main color in this image?"
       requires_image: true
+

@@ -13,7 +13,7 @@
     "@json-render/core": "^0.12.0",
     "@json-render/react": "^0.12.0",
     "@json-render/shadcn": "^0.12.0",
-    "@json-render/zustand": "^0.11.0",
+    "@json-render/zustand": "^0.14.0",
     "immer": "^11.1.4",
     "react": "^19.0.0",
     "react-dom": "^19.0.0",
